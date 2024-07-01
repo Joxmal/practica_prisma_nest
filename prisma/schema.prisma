@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -13,13 +14,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String   @unique @db.VarChar(50)
-  content   String?  @db.VarChar(255)
-  published Boolean  @default(false)
-  image   String[]  @db.Text
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  password String  
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  post Post[]
+
+  @@map("users")
+
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String    @unique @db.VarChar(50)
+  content   String?   @db.VarChar(255)
+  published Boolean   @default(false)
+  images     String[] @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User? @relation(fields: [authorID], references: [id])
+  authorID Int?
+
+  files File[]
+
+  @@map("posts")
+}
+
+model File {
+  id       Int    @id @default(autoincrement())
+  filename String
+  patch    String
+  size     Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  
+  post Post? @relation(fields: [postId],references: [id])
+  postId Int?
+
+  @@map("files")
+
 }

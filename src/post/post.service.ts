@@ -10,21 +10,35 @@ export class PostService {
 
 
   async create(createPostDto: CreatePostDto) {
+
     const existinPost = await this.prisma.post.findFirst({
       where: {
         title: createPostDto.title   
       },
     });
+
     if(existinPost){
       throw new ConflictException('POST YA EXISTE');
     }
 
     try {
-      return this.prisma.post.create({
+     return await this.prisma.post.create({
         data: createPostDto,
+        include:{
+          author: {
+            select: {
+              id: true,
+              name: true,
+              createdAt: true
+            },
+          },
+          files: true
+        }
       })
     } catch (error) {
-      
+      if(error.meta.field_name === "posts_authorID_fkey (index)")
+        throw new ConflictException('EL AUTOR NO EXISTE')
+      console.log(error)
     }
 
   }
@@ -53,11 +67,11 @@ export class PostService {
     try {
 
 
-      const updatePost = await this.prisma.post.update({
-        where: {id:existinPost.id},
-        data: updatePostDto,
-      });
-      return updatePost
+    //  const updatePost = await this.prisma.post.update({
+    //    where: {id:existinPost.id},
+    //    data: updatePostDto,
+    //  });
+    //  return updatePost
       
     } catch (error) {
       console.log(error)
