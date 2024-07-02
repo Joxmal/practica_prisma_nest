@@ -16,7 +16,7 @@ datasource db {
 
 model User {
   id       Int      @id @default(autoincrement())
-  name     String   @unique
+  name     String
   password String  
 
   createdAt DateTime @default(now())
@@ -38,15 +38,16 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  author   User? @relation(fields: [authorID], references: [id])
+  author   User? @relation(fields: [authorID], references: [id]) // relacion uno a uno
   authorID Int?
 
-  files filesPost[]
-
+  files File? @relation(fields: [filesID],references: [id]) // uno a muchos
+  filesID Int[] 
+ 
   @@map("posts")
 }
 
-model filesPost {
+model File {
   id       Int    @id @default(autoincrement())
   filename String
   patch    String

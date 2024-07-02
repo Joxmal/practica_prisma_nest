@@ -11,6 +11,13 @@ export class PostService {
 
   async create(createPostDto: CreatePostDto) {
 
+    const filesPost = createPostDto.filesPost.map(file => {
+      return {
+        id: file
+      }
+    })
+    delete createPostDto.filesPost
+
     const existinPost = await this.prisma.post.findFirst({
       where: {
         title: createPostDto.title   
@@ -23,7 +30,12 @@ export class PostService {
 
     try {
      return await this.prisma.post.create({
-        data: createPostDto,
+        data:{
+          ...createPostDto,
+          files:{
+            connect:  filesPost
+          }
+        },
         include:{
           author: {
             select: {
@@ -32,15 +44,24 @@ export class PostService {
               createdAt: true
             },
           },
-          files: true
+          files: {
+            select:{
+              id: true,
+              filename: true,
+              size: true
+            }
+          }
         }
       })
     } catch (error) {
       if(error.meta.field_name === "posts_authorID_fkey (index)")
         throw new ConflictException('EL AUTOR NO EXISTE')
-      console.log(error)
-    }
 
+      this.handlerFileRecordsError({error,fileDtoExpected:filesPost.length})
+      console.log(error)
+      throw new Error('OCURRIO UN ERROR AL GUARDAR EL POST')
+
+    }
   }
 
   findAll() {
@@ -49,6 +70,16 @@ export class PostService {
 
   async findOne(id: number) {
      const post = await this.prisma.post.findUnique({
+      include:{
+        author:{
+          select: {
+            id: true,
+            name: true,
+            createdAt: true
+          },
+        },
+        files: true
+      },
       where: {
         id: id,
       },
@@ -64,20 +95,61 @@ export class PostService {
 
     const existinPost = await this.findOne(id)
 
+    const filesPostExist = existinPost.files.map(file => {
+      return {
+        id: file.id
+      }
+    })
+
+    const filesPostUpdate = updatePostDto.filesPost.map(file => {
+      return {
+        id: file
+      }
+    })
+
+    console.log(filesPostExist)
+    console.log(filesPostUpdate)
+
     try {
 
+      delete updatePostDto.filesPost
 
-    //  const updatePost = await this.prisma.post.update({
-    //    where: {id:existinPost.id},
-    //    data: updatePostDto,
-    //  });
-    //  return updatePost
+    const updatePost = await this.prisma.post.update({
+      where: {id:existinPost.id},
+      data: {
+        ...updatePostDto,
+        files:{
+          disconnect: filesPostExist,
+          connect: filesPostUpdate,
+        }
+      },
+      include:{
+        author: {
+          select: {
+            id: true,
+            name: true,
+            createdAt: true
+          },
+        },
+        files: {
+          select:{
+            id: true,
+            filename: true,
+            size: true
+          }
+        }
+      }
+    });
+    return updatePost
       
     } catch (error) {
       console.log(error)
+      console.log(filesPostExist.length)
       if(error.code === 'P2002' && error.meta.modelName === 'Post'){
         throw new ConflictException(`Ya existe un post con el título ${updatePostDto.title}`)
       }
+
+      this.handlerFileRecordsError({error,fileDtoExpected:filesPostExist.length+1})
     }
   }
 
@@ -89,12 +161,20 @@ export class PostService {
           id: id,
         },
       })
+
+      return {message: 'Post eliminado correctamente'}
     } catch (error) {
-      console.log(error)
       if(error.code === 'P2025'){
         throw new NotFoundException('POST NO ENCONTRADO')
       }
     }
 
+  }
+
+  //error al no poder vincular un file 
+  private handlerFileRecordsError({error,fileDtoExpected}: {error:any, fileDtoExpected:number}){
+    if(error.meta?.cause.split(",")[0] ===  `Expected ${fileDtoExpected} records to be connected`){
+      throw new ConflictException('files no encontrados')
+    }
   }
 }

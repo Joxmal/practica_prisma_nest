@@ -2,7 +2,7 @@ import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, 
 
 export class CreatePostDto {
 
-@IsString({message:"dame un string chimbo no sabes nada"})
+@IsString()
 @MinLength(5)
 title: string;
     
@@ -29,6 +29,8 @@ images?: string[]
 @IsNumber()
 authorID: number
 
-
+@IsArray()
+@IsOptional()
+filesPost?: number[]
 
 }
