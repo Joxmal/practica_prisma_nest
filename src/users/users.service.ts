@@ -15,7 +15,7 @@ export class UsersService {
   async create(userObject: CreateUserDto) {
     try {
       
-      console.log(userObject)
+      console.log( "key",userObject)
   
   
       const existingUser = await this.prisma.user.findFirst({
@@ -24,8 +24,8 @@ export class UsersService {
         }
       })
   
-      if (existingUser) {
-        throw new ConflictException('Ya existe este usuario');
+      if (existingUser !== null) {
+       throw new ConflictException('Ya existe este usuario');
       }
   
       const { password } = userObject;
@@ -39,13 +39,14 @@ export class UsersService {
       }
   
       return await this.prisma.user.create({
-        data: {
-          name: userObject.name,
-          password: userObject.password,
-        },
+        data: userObject,
       });
       
     } catch (error) {
+
+      if(error?.message === "Ya existe este usuario")
+        throw new ConflictException('Ya existe este usuario')
+
       console.log(error)
     }
 

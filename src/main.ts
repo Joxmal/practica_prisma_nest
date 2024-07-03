@@ -31,5 +31,6 @@ async function bootstrap() {
 
   // Start the server and listen on port 3000
   await app.listen(3000);
+  console.log(`app in ${await app.getUrl()}`)
 }
 bootstrap();
