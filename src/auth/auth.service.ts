@@ -1,6 +1,11 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+
+import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginAuthDto } from './dto/login-auth.dto';
+
+
+
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -13,30 +18,32 @@ export class AuthService {
 
 
   async loginUser(user: LoginAuthDto) {
-    const userExist = await  this.prisma.user.findFirst({
+    const userExist = await  this.prisma.user.findUnique({
        where: { 
         name: user.name, 
       } 
-      });
+    });
 
-    console.log(user)
+    if (!userExist) throw new HttpException('este usuario no existe', HttpStatus.FORBIDDEN)
 
+    const checkPassword = await compare(user.password, userExist.password)
+
+    if(!checkPassword) throw new HttpException('contraseña incorrecta', 403)
 
     const payload = {
-      sub: userExist.id,
-      username: userExist.name,
+      id: userExist.id,
+      name: userExist.name,
     }
 
-
+    const token = this.jwtService.sign(payload)
     
-    if(!userExist || userExist.password!== user.password){
-      throw new ForbiddenException()
-    }
+    const data  = {
+      user: userExist,
+      token
+  }
 
-
-    return {
-      access_token: await this.jwtService.signAsync(payload)
-    }
+    return data
+    
 
   }
 }

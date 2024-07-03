@@ -2,18 +2,19 @@ import { Controller, Get, Post, Body, Patch, Param, Delete,UseGuards } from '@ne
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
 
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+
+@UseGuards(JwtAuthGuard)
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
-
+  
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto);
   }
-
-  @UseGuards(AuthGuard)
+  
   @Get()
   findAll() {
     return this.postService.findAll();

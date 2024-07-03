@@ -1,16 +1,20 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 
 import { AuthController } from './auth.controller';
 import { PrismaService } from 'src/prisma.service';
-import { AuthGuard } from './auth.guard';
+
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constanst/jwt-contanst'; 
+import { JwtStrategy } from './constanst/jwt-strategy'; 
+import { LoggerMiddleware } from './logger/logger.middleware';
+
 
 @Module({
+  providers: [AuthService,PrismaService, JwtStrategy],
   controllers: [AuthController],
-  providers: [AuthService,PrismaService],
+
   imports:[
     JwtModule.register({
       global:true,
@@ -18,7 +22,11 @@ import { AuthGuard } from './auth.guard';
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  exports: [AuthService
-  ],
 })
-export class AuthModule {}
+export class AuthModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+     .apply(LoggerMiddleware)
+     .forRoutes('auth');
+  }
+}
