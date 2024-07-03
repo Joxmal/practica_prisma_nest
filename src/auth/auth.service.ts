@@ -20,8 +20,8 @@ export class AuthService {
   async loginUser(user: LoginAuthDto) {
     const userExist = await  this.prisma.user.findUnique({
        where: { 
-        name: user.name, 
-      } 
+        name: user.name,
+      }
     });
 
     if (!userExist) throw new HttpException('este usuario no existe', HttpStatus.FORBIDDEN)
@@ -33,6 +33,7 @@ export class AuthService {
     const payload = {
       id: userExist.id,
       name: userExist.name,
+      role: userExist.role
     }
 
     const token = this.jwtService.sign(payload)
@@ -42,6 +43,7 @@ export class AuthService {
       token
   }
 
+    delete data.user.password
     return data
     
 

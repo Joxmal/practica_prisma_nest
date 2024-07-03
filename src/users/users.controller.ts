@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Request as RequestExpress , } from 'express';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @ApiTags("Modulo Users")
 @ApiBearerAuth()
@@ -18,7 +20,9 @@ export class UsersController {
   }
 
   @Get()
-  getAllUsers() {
+  getAllUsers(@Request() req:RequestExpress ) {
+
+    console.log(req)
     return this.usersService.getAllUsers();
   }
 

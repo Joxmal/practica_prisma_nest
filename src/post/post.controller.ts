@@ -5,8 +5,11 @@ import { UpdatePostDto } from './dto/update-post.dto';
 
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { Role } from 'src/common/enums/rol.enum';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard,RolesGuard)
 @ApiBearerAuth()
 @ApiTags("Modulo POST")
 @Controller('post')
@@ -19,6 +22,7 @@ export class PostController {
   }
   
   @Get()
+  @Roles(Role.ADMIN)
   findAll() {
     return this.postService.findAll();
   }
