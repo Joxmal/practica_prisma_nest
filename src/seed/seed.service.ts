@@ -4,6 +4,7 @@ import { UpdateSeedDto } from './dto/update-seed.dto';
 import { PrismaService } from 'src/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { Role } from 'src/common/enums/rol.enum';
 
 @Injectable()
 export class SeedService {
@@ -28,7 +29,7 @@ export class SeedService {
     const adminUser = await this.usersService.create({
       name: "admin",
       password: "admin123",
-      role: "ADMINISTRADOR",
+      role: Role.SUPERADMIN,
     })
 
     
