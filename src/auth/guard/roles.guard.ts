@@ -31,6 +31,17 @@ export class RolesGuard implements CanActivate {
       throw new Error('No se ha iniciado sesión')
     }
 
+    if(role === Role.SUPERADMIN)
+      return true
+
+    if (role === Role.ADMIN && user.role === Role.SUPERADMIN) {
+      return true;
+    }
+
+    if (role === Role.USER && (user.role === Role.SUPERADMIN || user.role === Role.ADMIN)  ) {
+      return true;
+    }
+
     if(role === user.role){
       return true;
     }else{

@@ -11,13 +11,8 @@ export class UsersService {
 
   constructor(private prisma: PrismaService){}
 
-
-  async create(userObject: CreateUserDto) {
+  async create(userObject: CreateUserDto) { 
     try {
-      
-      console.log( "key",userObject)
-  
-  
       const existingUser = await this.prisma.user.findFirst({
         where:{
           name: userObject.name 
@@ -32,14 +27,17 @@ export class UsersService {
   
       const hashedPassword = await hash(password, 10);
   
-  
       userObject = {
         ...userObject,
         password:  hashedPassword,
       }
   
       return await this.prisma.user.create({
-        data: userObject,
+        data: {
+          name: userObject.name,
+          password: userObject.password,
+          role: userObject.role
+        },
       });
       
     } catch (error) {
@@ -49,10 +47,6 @@ export class UsersService {
 
       console.log(error)
     }
-
-
-
-
   }
 
 

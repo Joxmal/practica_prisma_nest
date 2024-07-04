@@ -6,19 +6,21 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request as RequestExpress , } from 'express';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/common/enums/rol.enum';
 
 @ApiTags("Modulo Users")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
+  
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-
+  
+  @Auth(Role.USER)
   @Get()
   getAllUsers(@Request() req:RequestExpress ) {
 

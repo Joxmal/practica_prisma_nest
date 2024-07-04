@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "users" ALTER COLUMN "password" SET DATA TYPE VARCHAR(100),
-ALTER COLUMN "role" DROP NOT NULL;

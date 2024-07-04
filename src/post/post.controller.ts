@@ -22,7 +22,7 @@ export class PostController {
   }
   
   @Get()
-  @Roles(Role.ADMIN)
+  @Roles(Role.SUPERADMIN)
   findAll() {
     return this.postService.findAll();
   }

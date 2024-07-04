@@ -1,12 +1,13 @@
 import { applyDecorators, UseGuards } from "@nestjs/common";
 import { Role } from "../../common/enums/rol.enum";
-import { AuthGuard } from "@nestjs/passport";
-import { RolesGuard } from "../guard/roles.guard";
 import { Roles } from "./roles.decorator";
+import { RolesGuard } from "../guard/roles.guard";
+import { JwtAuthGuard } from "../guard/jwt-auth.guard";
 
-export function auth(role: Role){
+
+export function Auth(role: Role){
     return applyDecorators(
         Roles(role),
-        UseGuards(AuthGuard, RolesGuard)
+        UseGuards(JwtAuthGuard, RolesGuard)
     )
 }
