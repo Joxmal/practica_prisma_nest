@@ -11,8 +11,7 @@ export class FileSizeGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const files: Express.Multer.File[] = request.files;
-    console.log("guard",request)
-    return request
+
 
     const totalSize = files.reduce((acc, file) => acc + file.size, 0);
     if (totalSize > this.maxTotalSize) {

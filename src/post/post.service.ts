@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma.service';
 import { CreateFilePostDto } from './dto/filePost/create-filePost.dto';
 import { existsSync } from 'fs';
 
+
 @Injectable()
 export class PostService {
 
@@ -14,11 +15,18 @@ export class PostService {
 
   async create(createPostDto: CreatePostDto) {
 
-    const filesPost = createPostDto.filesPost.map(file => {
-      return {
-        id: file
-      }
-    })
+    let filesPost: {id: number}[]
+    if(createPostDto?.filesPost){
+      filesPost = createPostDto.filesPost.map(file => {
+        return {
+          id: file
+        }
+      })
+    }
+
+    console.log(filesPost)
+
+
     delete createPostDto.filesPost
 
     const existinPost = await this.prisma.post.findFirst({
@@ -181,6 +189,31 @@ export class PostService {
     }
   }
 
+    async createNewPostFile(req:any,file:Array<Express.Multer.File>,nameFiles: string){
+
+      const sanitizedFiles = file.map(file => {
+        const { buffer, ...fileData } = file;
+        return fileData;
+      });
+
+
+      try {
+        await this.prisma.filesPost.createMany({
+          data: file.map(file => ({
+            groupName: nameFiles,
+            filename:file.filename,
+            patch:file.path,
+            size:file.size,
+          }))
+         
+        })
+      } catch (error) {
+        
+      }
+      const secureUrl = `${ file.map(file =>  `${req.protocol}://[${req.ip}]:${req.socket.localPort}${req.url}/${file.filename}`) }`
+      return secureUrl
+    }
+
    getStaticFileImage( imageName:string){
 
     const path = join(__dirname, '../../static/uploads/filePost', imageName)
@@ -191,5 +224,13 @@ export class PostService {
     }
 
     return path
-   }
+  }
+
+  async removeFilePost(id:number){
+    const file = this.prisma.filesPost.findUnique({
+      where: {
+        id: +id,
+      },
+    })
+  }
 }

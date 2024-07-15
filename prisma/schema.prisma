@@ -56,9 +56,10 @@ model Post {
 
 model filesPost {
   id       Int    @id @default(autoincrement())
-  filename String
-  patch    String
-  size     Int
+  groupName String
+  filename  String
+  patch     String
+  size      Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
