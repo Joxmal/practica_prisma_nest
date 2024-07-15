@@ -12,7 +12,7 @@ content: string;
 
 @IsOptional()
 @IsBoolean()
-published: boolean
+published?: boolean
 
 @IsArray()
 @IsOptional()

@@ -9,18 +9,21 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/common/enums/rol.enum';
 
+
+
 @ApiTags("Modulo Users")
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   
+  @Auth(Role.SUPERADMIN)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
   
-  @Auth(Role.USER)
+  @Auth(Role.ADMIN)
   @Get()
   getAllUsers(@Request() req:RequestExpress ) {
 
@@ -28,16 +31,19 @@ export class UsersController {
     return this.usersService.getAllUsers();
   }
 
+  @Auth(Role.ADMIN)
   @Get(':id')
   getUserById(@Param('id') id: string) {
     return this.usersService.getOneUser(id);
   }
 
+  @Auth(Role.SUPERADMIN)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @Auth(Role.SUPERADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);

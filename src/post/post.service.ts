@@ -1,7 +1,10 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { join } from 'path';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma.service';
+import { CreateFilePostDto } from './dto/filePost/create-filePost.dto';
+import { existsSync } from 'fs';
 
 @Injectable()
 export class PostService {
@@ -177,4 +180,16 @@ export class PostService {
       throw new ConflictException('files no encontrados')
     }
   }
+
+   getStaticFileImage( imageName:string){
+
+    const path = join(__dirname, '../../static/uploads/filePost', imageName)
+
+
+    if( !existsSync(path)){
+      throw new BadRequestException('no imagen encontrada')
+    }
+
+    return path
+   }
 }
