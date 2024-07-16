@@ -89,6 +89,18 @@ export class PostController {
     res.sendFile(path)
   }
 
+  @Get('files/id/:id')
+  async finOneFileImage_id(
+  @Res() res: Response,
+  @Param('id', ParseIntPipe) id: number
+  ){
+    const path = await this.postService.getStaticFileImage_ID(+id)
+
+    res.sendFile(path)
+    
+
+  }
+
   @Delete('files/:id')
   removeFilePost(
     @Param('id', ParseIntPipe) id:number

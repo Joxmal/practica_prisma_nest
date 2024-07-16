@@ -5,10 +5,18 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { SeedModule } from './seed/seed.module';
 
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      serveRoot: '/post/',
+      rootPath: join(__dirname, '..', 'static/uploads/filePost'),
+    }),
     ConfigModule.forRoot(),
-    PostModule, AuthModule, UsersModule, SeedModule],
+    PostModule, AuthModule, UsersModule, SeedModule
+  ],
   controllers: [],
   providers: [],
 })

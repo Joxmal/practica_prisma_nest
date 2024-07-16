@@ -214,7 +214,9 @@ export class PostService {
       return secureUrl
     }
 
-   getStaticFileImage( imageName:string){
+  getStaticFileImage( imageName:string){
+
+
 
     const path = join(__dirname, '../../static/uploads/filePost', imageName)
 
@@ -224,6 +226,23 @@ export class PostService {
     }
 
     return path
+  }
+
+  async getStaticFileImage_ID(id:number){
+    const fileseach = await this.prisma.filesPost.findUnique({
+      where:{
+        id:id
+      }
+    })
+
+    if(!fileseach){
+      throw new BadRequestException('no imagen encontrada')
+    }
+
+    const path = join(__dirname, '../../static/uploads/filePost', fileseach.filename)
+
+    return path
+
   }
 
   async removeFilePost(id:number){
