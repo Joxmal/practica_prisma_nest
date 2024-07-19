@@ -5,12 +5,16 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma.service';
 import { CreateFilePostDto } from './dto/filePost/create-filePost.dto';
 import { existsSync } from 'fs';
+import { FileService } from 'src/common/files/filesServices';
 
 
 @Injectable()
 export class PostService {
 
-  constructor(private prisma:PrismaService){}
+  constructor(
+    private prisma:PrismaService,
+    private readonly fileService: FileService
+  ){}
 
 
   async create(createPostDto: CreatePostDto) {
@@ -196,7 +200,6 @@ export class PostService {
         return fileData;
       });
 
-
       try {
         await this.prisma.filesPost.createMany({
           data: file.map(file => ({
@@ -215,12 +218,7 @@ export class PostService {
     }
 
   getStaticFileImage( imageName:string){
-
-
-
     const path = join(__dirname, '../../static/uploads/filePost', imageName)
-
-
     if( !existsSync(path)){
       throw new BadRequestException('no imagen encontrada')
     }
@@ -228,12 +226,41 @@ export class PostService {
     return path
   }
 
-  async getStaticFileImage_ID(id:number){
-    const fileseach = await this.prisma.filesPost.findUnique({
-      where:{
-        id:id
-      }
-    })
+  async getStaticFileImage_ID(id:string){
+
+    function esNumero(cadena:any) {
+      return !isNaN(cadena);
+    }
+
+    let fileseach: {
+      id: number;
+      groupName: string;
+      filename: string;
+      patch: string;
+      size: number;
+      createdAt: Date;
+      updatedAt: Date;
+  }
+
+    if(esNumero(id) ){ //  verificar si es un numero
+      console.log("es un numero")
+
+      fileseach = await this.prisma.filesPost.findUnique({
+        where:{
+  
+          id:+id
+        }
+      })
+
+    }else{
+      console.log("no es un numero")
+      fileseach = await this.prisma.filesPost.findFirst({
+        where:{
+          filename:id
+        }
+      })
+    }
+
 
     if(!fileseach){
       throw new BadRequestException('no imagen encontrada')
@@ -246,10 +273,34 @@ export class PostService {
   }
 
   async removeFilePost(id:number){
-    const file = this.prisma.filesPost.findUnique({
+    console.log(id)
+    const file = await this.prisma.filesPost.findUnique({
       where: {
-        id: +id,
+        id: id,
       },
     })
+
+    if(!file){
+     throw new NotFoundException("no se encontro el archivo: " + id)
+    }
+
+    const filePath =  `./static/uploads/filePost/${file.filename}`
+
+    const deleteFile = await this.prisma.filesPost.delete({
+      where:{
+        id: id
+      }
+    })
+
+    
+     const deletedFile= await this.fileService.deleteFile(filePath)
+
+    
+
+    return {
+      response:`archivo N° ${id} eliminado con exito`,
+    }
   }
+
+  //
 }

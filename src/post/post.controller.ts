@@ -78,35 +78,25 @@ export class PostController {
     return this.postService.createNewPostFile(req,file,data.name)
   }
 
-
-  @Get('files/:imageName')
-  finOneFileImage(
-  @Res() res: Response,
-  @Param('imageName') imageName: string
-  ){
-    const path = this.postService.getStaticFileImage(imageName)
-
-    res.sendFile(path)
-  }
-
-  @Get('files/id/:id')
+  @Get('files/:id')
   async finOneFileImage_id(
   @Res() res: Response,
-  @Param('id', ParseIntPipe) id: number
+  @Param('id') id: string
   ){
-    const path = await this.postService.getStaticFileImage_ID(+id)
-
+    const path = await this.postService.getStaticFileImage_ID(id)
     res.sendFile(path)
-    
-
   }
+
+
 
   @Delete('files/:id')
-  removeFilePost(
+  async removeFile(
     @Param('id', ParseIntPipe) id:number
   ){
-    return this.postService.removeFilePost(id)
+  
+    return await this.postService.removeFilePost(id)
   }
+
 
 
 }

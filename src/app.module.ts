@@ -7,6 +7,7 @@ import { SeedModule } from './seed/seed.module';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { ExcelModule } from './excel/excel.module';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', 'static/uploads/filePost'),
     }),
     ConfigModule.forRoot(),
-    PostModule, AuthModule, UsersModule, SeedModule
+    PostModule, AuthModule, UsersModule, SeedModule, ExcelModule
   ],
   controllers: [],
   providers: [],
