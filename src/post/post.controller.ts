@@ -26,23 +26,30 @@ export class PostController {
   
   @Auth(Role.ADMIN)
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  create(
+    @Req() req: any,
+    @Body() createPostDto: CreatePostDto) {
+    return this.postService.create(createPostDto,req);
   }
   
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  findAll(
+    @Req() req: any,
+  ) {
+    console.log('get post')
+    return this.postService.findAll(req);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  findOne(
+    @Req() req: any,
+    @Param('id') id: string) {
+    return this.postService.findOne({id:+id, req:req});
   }
 
   @Auth(Role.ADMIN)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto){
     return this.postService.update(+id, updatePostDto);
   }
 
@@ -55,12 +62,12 @@ export class PostController {
   //crear unicamente files nuevos
   // @Auth(Role.ADMIN)
 
-  @Auth(Role.ADMIN)
+  // @Auth(Role.ADMIN)
   @Post('files')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('file',10, {
     fileFilter: fileFilter,
-    limits:{fileSize:1500000},
+    limits:{fileSize:8421056},
     storage:diskStorage({
       destination:'./static/uploads/filePost',
       filename: fileNamer

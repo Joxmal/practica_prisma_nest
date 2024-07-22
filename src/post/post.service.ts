@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma.service';
 import { CreateFilePostDto } from './dto/filePost/create-filePost.dto';
 import { existsSync } from 'fs';
 import { FileService } from 'src/common/files/files.service';
+import { consult_get_post } from './prisma/Consults';
 
 
 @Injectable()
@@ -17,7 +18,7 @@ export class PostService {
   ){}
 
 
-  async create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto, req:any ) {
 
     let filesPost: {id: number}[]
     if(createPostDto?.filesPost){
@@ -28,8 +29,6 @@ export class PostService {
       })
     }
 
-    console.log(filesPost)
-
     let cooperadorDto: {id: number}[]
     if(createPostDto?.patrocinador){
       cooperadorDto = createPostDto.patrocinador.map(id => {
@@ -38,11 +37,8 @@ export class PostService {
         }
       })
     }
-
-
     delete createPostDto.filesPost
     delete createPostDto.patrocinador
-
     const existinPost = await this.prisma.post.findFirst({
       where: {
         title: createPostDto.title   
@@ -54,7 +50,7 @@ export class PostService {
     }
 
     try {
-     return await this.prisma.post.create({
+     const result =  await this.prisma.post.create({
         data:{
           ...createPostDto,
           files:{
@@ -64,29 +60,20 @@ export class PostService {
             connect: cooperadorDto
           }
         },
-        include:{
-          author: {
-            select: {
-              id: true,
-              name: true,
-              createdAt: true
-            },
-          },
-          files: {
-            select:{
-              id: true,
-              filename: true,
-              size: true
-            }
-          },
-          cooperador:{
-            select:{
-              id:true,
-              nombre: true,
-            }
-          } 
-        }
+        include:consult_get_post
       })
+
+      const customResult =  [result].map(item=>{
+        const modifiedFiles= item.files.map(file=>{
+          file.secureUrl = `${req.protocol}://[${req.ip}]:${req.socket.localPort}${file.secureUrl}`
+          return file
+        })
+        item.files= modifiedFiles
+        return item
+      })
+      console.log(customResult);
+      return customResult
+
     } catch (error) {
       if(error.meta.field_name === "posts_authorID_fkey (index)")
         throw new ConflictException('EL AUTOR NO EXISTE')
@@ -98,22 +85,26 @@ export class PostService {
     }
   }
 
-  findAll() {
-    return this.prisma.post.findMany({orderBy:{id:'asc'}}) ;
+  async findAll(req:any) {
+    const result = await this.prisma.post.findMany({
+      orderBy:{id:'asc'},
+      include: consult_get_post
+    }) ;
+
+    result.forEach(post =>{
+      post.files.forEach(file=>{
+        const urlCuston =  `${req.protocol}://[${req.ip}]:${req.socket.localPort}${file.secureUrl}`
+        file.secureUrl = urlCuston
+      })
+    })
+
+    return result
+
   }
 
-  async findOne(id: number) {
+  async findOne({id,req=false}:{id:number,req:any} ) {
      const post = await this.prisma.post.findUnique({
-      include:{
-        author:{
-          select: {
-            id: true,
-            name: true,
-            createdAt: true
-          },
-        },
-        files: true
-      },
+      include:consult_get_post,
       where: {
         id: id,
       },
@@ -122,12 +113,17 @@ export class PostService {
     if(!post){
       throw new NotFoundException('POST NO ENCONTRADO');
     }
-    return post;
+    const customPost = post.files.map(file=>{
+      file.secureUrl = `${req.protocol}://[${req.ip}]:${req.socket.localPort}${file.secureUrl}`
+      return file
+    })
+    post.files = customPost
+    return post
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
 
-    const existinPost = await this.findOne(id)
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    const existinPost = await this.findOne({id:id,req:false})
 
     console.log(updatePostDto)
 
@@ -232,6 +228,9 @@ export class PostService {
 
     async createNewPostFile(req:any,file:Array<Express.Multer.File>,nameFiles: string){
 
+      const secureUrl = `${ file.map(file =>  `${req.protocol}://[${req.ip}]:${req.socket.localPort}${req.url}/${file.filename}`)}`
+
+
       const sanitizedFiles = file.map(file => {
         const { buffer, ...fileData } = file;
         return fileData;
@@ -244,13 +243,13 @@ export class PostService {
             filename:file.filename,
             patch:file.path,
             size:file.size,
+            secureUrl: `${req.url}/${file.filename}`
           }))
          
         })
       } catch (error) {
         
       }
-      const secureUrl = `${ file.map(file =>  `${req.protocol}://[${req.ip}]:${req.socket.localPort}${req.url}/${file.filename}`) }`
       return secureUrl
     }
 
