@@ -88,7 +88,7 @@ export class PostController {
   }
 
 
-
+  @Auth(Role.ADMIN)
   @Delete('files/:id')
   async removeFile(
     @Param('id', ParseIntPipe) id:number
@@ -96,7 +96,4 @@ export class PostController {
   
     return await this.postService.removeFilePost(id)
   }
-
-
-
 }

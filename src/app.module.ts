@@ -8,15 +8,16 @@ import { SeedModule } from './seed/seed.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ExcelModule } from './excel/excel.module';
+import { CooperadorModule } from './Cooperador/cooperador.module';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      serveRoot: '/post/',
-      rootPath: join(__dirname, '..', 'static/uploads/filePost'),
-    }),
+    // ServeStaticModule.forRoot({
+    //   serveRoot: '/post/',
+    //   rootPath: join(__dirname, '..', 'static/uploads/filePost'),
+    // }),
     ConfigModule.forRoot(),
-    PostModule, AuthModule, UsersModule, SeedModule, ExcelModule
+    PostModule, AuthModule, UsersModule, SeedModule, ExcelModule, CooperadorModule
   ],
   controllers: [],
   providers: [],

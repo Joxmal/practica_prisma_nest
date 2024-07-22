@@ -33,4 +33,8 @@ authorID: number
 @IsOptional()
 filesPost?: number[]
 
+@IsArray()
+@IsOptional()
+patrocinador?: number[] 
+
 }

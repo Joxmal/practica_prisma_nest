@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["omitApi"]
 }
 
@@ -14,7 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum Role {
   user
   admin
@@ -22,10 +21,10 @@ enum Role {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  name     String   @unique
-  role     Role?    @default(user)  
-  password String   @db.VarChar(100)
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  role     Role?  @default(user)
+  password String @db.VarChar(100)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,14 +32,13 @@ model User {
   post Post[]
 
   @@map("users")
-
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  title     String    @unique @db.VarChar(50)
-  content   String?   @db.VarChar(255)
-  published Boolean?   @default(false)
+  id        Int      @id @default(autoincrement())
+  title     String   @unique @db.VarChar(50)
+  content   String?  @db.VarChar(255)
+  published Boolean? @default(false)
   images    String[] @db.Text
 
   createdAt DateTime @default(now())
@@ -51,11 +49,13 @@ model Post {
 
   files filesPost[]
 
+  cooperador Cooperador[]
+
   @@map("posts")
 }
 
 model filesPost {
-  id       Int    @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   groupName String
   filename  String
   patch     String
@@ -63,8 +63,39 @@ model filesPost {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   post Post[]
 
   @@map("files")
+}
+
+// Cooperadores
+
+
+enum TipoCooperador {
+  patrocinador
+  colaborador
+}
+
+//tambien puede ser colaborador
+model Cooperador {
+  id         Int            @id @default(autoincrement())
+  tipoCedula String?
+  cedula     Int            @unique @db.Integer()
+  nombre     String         @db.VarChar(30)
+  ubicacion  String?
+  tipo       TipoCooperador
+
+  categorias Categoria[]
+  post       Post[]
+
+  @@map("cooperador")
+}
+
+model Categoria {
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  cooperador Cooperador[]
+
+  @@map("categorias")
 }

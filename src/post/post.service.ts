@@ -30,8 +30,18 @@ export class PostService {
 
     console.log(filesPost)
 
+    let cooperadorDto: {id: number}[]
+    if(createPostDto?.patrocinador){
+      cooperadorDto = createPostDto.patrocinador.map(id => {
+        return {
+          id: id
+        }
+      })
+    }
+
 
     delete createPostDto.filesPost
+    delete createPostDto.patrocinador
 
     const existinPost = await this.prisma.post.findFirst({
       where: {
@@ -49,6 +59,9 @@ export class PostService {
           ...createPostDto,
           files:{
             connect:  filesPost
+          },
+          cooperador:{
+            connect: cooperadorDto
           }
         },
         include:{
@@ -65,7 +78,13 @@ export class PostService {
               filename: true,
               size: true
             }
-          }
+          },
+          cooperador:{
+            select:{
+              id:true,
+              nombre: true,
+            }
+          } 
         }
       })
     } catch (error) {
@@ -110,21 +129,30 @@ export class PostService {
 
     const existinPost = await this.findOne(id)
 
+    console.log(updatePostDto)
+
     const filesPostExist = existinPost.files.map(file => {
       return {
         id: file.id
       }
     })
 
-    const filesPostUpdate = updatePostDto.filesPost.map(file => {
-      return {
-        id: file
-      }
-    })
-
-    console.log(filesPostExist)
-    console.log(filesPostUpdate)
-
+    let filesPostUpdate:{id: number}[]
+    if(updatePostDto?.filesPost){
+      filesPostUpdate = updatePostDto.filesPost.map(file => {
+        return {
+          id: file
+        }
+      })
+    }
+    let cooperadorUpdate:{id: number}[]
+    if( updatePostDto?.patrocinador){
+      cooperadorUpdate = updatePostDto.patrocinador.map(id => {
+        return {
+          id:id
+        }
+      })
+    }
     try {
 
       delete updatePostDto.filesPost
@@ -136,6 +164,9 @@ export class PostService {
         files:{
           disconnect: filesPostExist,
           connect: filesPostUpdate,
+        },
+        cooperador:{
+          set : cooperadorUpdate
         }
       },
       include:{
@@ -151,6 +182,12 @@ export class PostService {
             id: true,
             filename: true,
             size: true
+          }
+        },
+        cooperador:{
+          select:{
+            id:true,
+            nombre:true
           }
         }
       }
@@ -247,7 +284,6 @@ export class PostService {
 
       fileseach = await this.prisma.filesPost.findUnique({
         where:{
-  
           id:+id
         }
       })
