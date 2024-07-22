@@ -5,7 +5,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma.service';
 import { CreateFilePostDto } from './dto/filePost/create-filePost.dto';
 import { existsSync } from 'fs';
-import { FileService } from 'src/common/files/filesServices';
+import { FileService } from 'src/common/files/files.service';
 
 
 @Injectable()

@@ -51,11 +51,12 @@ export class SeedService {
     //debug para borrar todo antes
     await this.prisma.categoria.deleteMany()
     await this.prisma.cooperador.deleteMany()
+    await this.prisma.post.deleteMany()
 
 
     message.categorias = await this.crearCaterogias()
-
     message.cooperador = await this.crearCooperador()
+    message.post = await this.crearPost()
 
     return message
 
@@ -85,8 +86,6 @@ export class SeedService {
 
   private async crearCooperador() {
     try {
-
-
       const patrocinador: any = 'patrocinador'
       const colaborador: any = 'colaborador'
       const cooperadorDataSeed = [
@@ -107,11 +106,122 @@ export class SeedService {
       return 'cooperador creado con exito'
     } catch (error) {
       console.log(error)
+      throw new ConflictException('Error Interno en el seed de copooperadores')
     }
 
   }
 
+  private async crearPost(id1=1,id2 =2){
 
+    const files = await this.prisma.filesPost.findMany()
+
+    if(files[0] && files[1]){
+      id1 = files[0].id
+      id2 = files[1].id
+    }
+
+
+    try {
+      const postDataSeed = [
+        {
+          title: "hallacas navideñas",
+          content: " lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem",
+          published: true,
+          images:[
+            'https://i.postimg.cc/bvpdrH36/playa_bella_vista06_(1).jpg',
+            'https://i.postimg.cc/MTJ5vLgC/noticia-1.jpg',
+            'https://i.postimg.cc/TPt2w8yw/playa_bella_vista05_(1).jpg'
+          ],
+          author: {
+            connect:{
+              name: 'admin'
+            }
+          },
+          files:{
+            connect:[
+              {id:id1},
+              {id:id2}
+            ]
+          },
+          cooperador:{
+            connect:[
+              {cedula: 28045702}
+            ]
+          }
+        },
+        {
+          title: "Mariño tiene Cafe",
+          content: " lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem",
+          published: true,
+          images:[
+            'https://i.postimg.cc/bvpdrH36/playa_bella_vista06_(1).jpg',
+            'https://i.postimg.cc/MTJ5vLgC/noticia-1.jpg',
+            'https://i.postimg.cc/TPt2w8yw/playa_bella_vista05_(1).jpg'
+          ],
+          author: {
+            connect:{
+              name: 'admin'
+            }
+          },
+          files:{
+            connect:[
+              {id:id1},
+              {id:id2}
+            ]
+          },
+          cooperador:{
+            connect:[
+              {cedula: 28045702}
+            ]
+          }
+        },
+        {
+          title: "La sabrosura esta en chuao",
+          content: " lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem",
+          published: true,
+          images:[
+            'https://i.postimg.cc/bvpdrH36/playa_bella_vista06_(1).jpg',
+            'https://i.postimg.cc/MTJ5vLgC/noticia-1.jpg',
+            'https://i.postimg.cc/TPt2w8yw/playa_bella_vista05_(1).jpg'
+          ],
+          author: {
+            connect:{
+              name: 'admin'
+            }
+          },
+          files:{
+            connect:[
+              {id:id1},
+              {id:id2}
+            ]
+          },
+          cooperador:{
+            connect:[
+              {cedula: 28045702}
+            ]
+          }
+        }
+      ]
+
+      // await this.prisma.post.create({
+      //   data: postDataSeed[0]
+      // })
+
+      const array_promises = []
+      postDataSeed.forEach((post) => {
+        array_promises.push(this.prisma.post.create({data:post}))
+      })
+
+      await Promise.all(array_promises)
+
+
+      return 'posts creados con exito'
+
+    } catch (error) {
+      console.log(error)
+      throw new ConflictException('Error Interno al crear seed de Post')
+    }
+  }
 
 
 }
