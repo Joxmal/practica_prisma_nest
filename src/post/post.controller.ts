@@ -11,7 +11,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { fileFilter } from 'src/common/enums/helpers/fileFilter.helper';
 import { diskStorage } from 'multer';
 import { fileNamer } from 'src/common/enums/helpers/fileNamer.helper';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
 // @UseGuards(JwtAuthGuard,RolesGuard)
@@ -42,9 +42,9 @@ export class PostController {
 
   @Get(':id')
   findOne(
-    @Req() req: any,
+    @Req() req: Request,
     @Param('id') id: string) {
-    return this.postService.findOne({id:+id, req:req});
+    return this.postService.findOne({id:+id, req});
   }
 
   @Auth(Role.ADMIN)

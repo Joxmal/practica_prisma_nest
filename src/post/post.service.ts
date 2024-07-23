@@ -7,6 +7,7 @@ import { CreateFilePostDto } from './dto/filePost/create-filePost.dto';
 import { existsSync } from 'fs';
 import { FileService } from 'src/common/files/files.service';
 import { consult_get_post } from './prisma/Consults';
+import { Request } from 'express';
 
 
 @Injectable()
@@ -21,6 +22,7 @@ export class PostService {
   async create(createPostDto: CreatePostDto, req:any ) {
 
     let filesPost: {id: number}[]
+   
     if(createPostDto?.filesPost){
       filesPost = createPostDto.filesPost.map(file => {
         return {
@@ -30,15 +32,17 @@ export class PostService {
     }
 
     let cooperadorDto: {id: number}[]
-    if(createPostDto?.patrocinador){
-      cooperadorDto = createPostDto.patrocinador.map(id => {
+    if(createPostDto?.cooperador){
+      cooperadorDto = createPostDto.cooperador.map(id => {
         return {
           id: id
         }
       })
     }
+
     delete createPostDto.filesPost
-    delete createPostDto.patrocinador
+    delete createPostDto.cooperador
+    
     const existinPost = await this.prisma.post.findFirst({
       where: {
         title: createPostDto.title   
@@ -63,23 +67,28 @@ export class PostService {
         include:consult_get_post
       })
 
+  
+
+    
+
       const customResult =  [result].map(item=>{
         const modifiedFiles= item.files.map(file=>{
-          file.secureUrl = `${req.protocol}://[${req.ip}]:${req.socket.localPort}${file.secureUrl}`
+          file.secureUrl = `${req.protocol}://${req.get('host')}${file.secureUrl}`
           return file
         })
         item.files= modifiedFiles
         return item
       })
-      console.log(customResult);
       return customResult
 
     } catch (error) {
+      console.log(error)
       if(error.meta.field_name === "posts_authorID_fkey (index)")
         throw new ConflictException('EL AUTOR NO EXISTE')
 
+     
+      
       this.handlerFileRecordsError({error,fileDtoExpected:filesPost.length})
-      console.log(error)
       throw new Error('OCURRIO UN ERROR AL GUARDAR EL POST')
 
     }
@@ -93,7 +102,7 @@ export class PostService {
 
     result.forEach(post =>{
       post.files.forEach(file=>{
-        const urlCuston =  `${req.protocol}://[${req.ip}]:${req.socket.localPort}${file.secureUrl}`
+        const urlCuston =  `${req.protocol}://${req.get('host')}${file.secureUrl}`
         file.secureUrl = urlCuston
       })
     })
@@ -102,7 +111,7 @@ export class PostService {
 
   }
 
-  async findOne({id,req=false}:{id:number,req:any} ) {
+  async findOne({id,req}: {id:number, req?:Request} ) {
      const post = await this.prisma.post.findUnique({
       include:consult_get_post,
       where: {
@@ -114,7 +123,8 @@ export class PostService {
       throw new NotFoundException('POST NO ENCONTRADO');
     }
     const customPost = post.files.map(file=>{
-      file.secureUrl = `${req.protocol}://[${req.ip}]:${req.socket.localPort}${file.secureUrl}`
+      // file.secureUrl = `${req.protocol}://[${req.ip}]:${req.socket.localPort}${file.secureUrl}`
+      file.secureUrl = `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
       return file
     })
     post.files = customPost
@@ -123,7 +133,16 @@ export class PostService {
 
 
   async update(id: number, updatePostDto: UpdatePostDto) {
-    const existinPost = await this.findOne({id:id,req:false})
+    const existinPost = await this.prisma.post.findUnique({
+      include:consult_get_post,
+      where: {
+        id: id,
+      },
+    });
+
+    if(!existinPost){
+      throw new NotFoundException('POST NO ENCONTRADO');
+    }
 
     console.log(updatePostDto)
 
@@ -142,8 +161,8 @@ export class PostService {
       })
     }
     let cooperadorUpdate:{id: number}[]
-    if( updatePostDto?.patrocinador){
-      cooperadorUpdate = updatePostDto.patrocinador.map(id => {
+    if( updatePostDto?.cooperador){
+      cooperadorUpdate = updatePostDto.cooperador.map(id => {
         return {
           id:id
         }
@@ -158,8 +177,7 @@ export class PostService {
       data: {
         ...updatePostDto,
         files:{
-          disconnect: filesPostExist,
-          connect: filesPostUpdate,
+          set: filesPostUpdate,
         },
         cooperador:{
           set : cooperadorUpdate
@@ -191,8 +209,6 @@ export class PostService {
     return updatePost
       
     } catch (error) {
-      console.log(error)
-      console.log(filesPostExist.length)
       if(error.code === 'P2002' && error.meta.modelName === 'Post'){
         throw new ConflictException(`Ya existe un post con el título ${updatePostDto.title}`)
       }
@@ -226,32 +242,32 @@ export class PostService {
     }
   }
 
-    async createNewPostFile(req:any,file:Array<Express.Multer.File>,nameFiles: string){
+  async createNewPostFile(req:any,file:Array<Express.Multer.File>,nameFiles: string){
 
-      const secureUrl = `${ file.map(file =>  `${req.protocol}://[${req.ip}]:${req.socket.localPort}${req.url}/${file.filename}`)}`
+    const secureUrl = `${ file.map(file =>  `${req.protocol}://${req.get('host')}/api/post/files/${file.filename}`)}`
 
 
-      const sanitizedFiles = file.map(file => {
-        const { buffer, ...fileData } = file;
-        return fileData;
-      });
+    const sanitizedFiles = file.map(file => {
+      const { buffer, ...fileData } = file;
+      return fileData;
+    });
 
-      try {
-        await this.prisma.filesPost.createMany({
-          data: file.map(file => ({
-            groupName: nameFiles,
-            filename:file.filename,
-            patch:file.path,
-            size:file.size,
-            secureUrl: `${req.url}/${file.filename}`
-          }))
-         
-        })
-      } catch (error) {
+    try {
+      await this.prisma.filesPost.createMany({
+        data: file.map(file => ({
+          groupName: nameFiles,
+          filename:file.filename,
+          patch:file.path,
+          size:file.size,
+          secureUrl: `${req.protocol}://${req.get('host')}/api/post/files/${file.filename}`
+        }))
         
-      }
-      return secureUrl
+      })
+    } catch (error) {
+      
     }
+    return secureUrl
+  }
 
   getStaticFileImage( imageName:string){
     const path = join(__dirname, '../../static/uploads/filePost', imageName)

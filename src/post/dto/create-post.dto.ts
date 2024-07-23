@@ -35,6 +35,6 @@ filesPost?: number[]
 
 @IsArray()
 @IsOptional()
-patrocinador?: number[] 
+cooperador?: number[] 
 
 }
