@@ -40,8 +40,8 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
 
 
-  // Start the server and listen on port 3000
-  await app.listen(3000);
+  // Start the server and listen on port 
+  await app.listen(process.env.PORT);
   console.log(`app in ${await app.getUrl()}`)
 }
 bootstrap();
