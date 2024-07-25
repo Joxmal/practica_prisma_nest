@@ -37,7 +37,8 @@ model User {
 model Post {
   id        Int      @id @default(autoincrement())
   title     String   @unique @db.VarChar(50)
-  content   String?  @db.VarChar(255)
+  content   String?
+  summary   String?  @db.VarChar(80)
   published Boolean? @default(false)
   images    String[] @db.Text
 
@@ -51,11 +52,13 @@ model Post {
 
   cooperador Cooperador[]
 
+  categoria Categoria[]
+
   @@map("posts")
 }
 
 model filesPost {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   groupName String
   filename  String
   patch     String
@@ -71,7 +74,6 @@ model filesPost {
 }
 
 // Cooperadores
-
 
 enum TipoCooperador {
   patrocinador
@@ -94,9 +96,10 @@ model Cooperador {
 }
 
 model Categoria {
-  id             Int          @id @default(autoincrement())
-  name           String       @unique
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
   cooperador Cooperador[]
+  post       Post[]
 
   @@map("categorias")
 }

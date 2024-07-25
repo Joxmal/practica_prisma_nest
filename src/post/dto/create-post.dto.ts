@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, MinLength } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
 
 export class CreatePostDto {
 
@@ -8,7 +8,14 @@ title: string;
     
 @IsNotEmpty()
 @IsString()
+@IsOptional()
 content: string;
+
+@IsNotEmpty()
+@IsString()
+@MaxLength(80)
+@IsOptional()
+summary: string
 
 @IsOptional()
 @IsBoolean()

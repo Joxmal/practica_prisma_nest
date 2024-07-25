@@ -8,6 +8,8 @@ import { existsSync } from 'fs';
 import { FileService } from 'src/common/files/files.service';
 import { consult_get_post } from './prisma/Consults';
 import { Request } from 'express';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { FindAllPost } from './dto/controller/findAllPost.dto';
 
 
 @Injectable()
@@ -67,18 +69,16 @@ export class PostService {
         include:consult_get_post
       })
 
-  
-
-    
-
       const customResult =  [result].map(item=>{
         const modifiedFiles= item.files.map(file=>{
-          file.secureUrl = `${req.protocol}://${req.get('host')}${file.secureUrl}`
+          file.secureUrl = `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
           return file
         })
         item.files= modifiedFiles
         return item
       })
+      
+
       return customResult
 
     } catch (error) {
@@ -94,21 +94,40 @@ export class PostService {
     }
   }
 
-  async findAll(req:any) {
+  async findAll(req:any, queryFindAllPost:FindAllPost) {
+    
+    const {limit=50, offset=0 , categoria = {}  } = queryFindAllPost
+    
     const result = await this.prisma.post.findMany({
+      where:{
+        categoria:{
+          some:{
+            name: categoria
+          }
+        }
+      }, 
       orderBy:{id:'asc'},
-      include: consult_get_post
+      include: consult_get_post,
+      take:limit,
+      skip:offset
     }) ;
 
     result.forEach(post =>{
+      const imagenesConcat: string[] = []
+      post.images.forEach(image=> imagenesConcat.push(image))// inyecto las imagenes externas
+       
       post.files.forEach(file=>{
-        const urlCuston =  `${req.protocol}://${req.get('host')}${file.secureUrl}`
+        imagenesConcat.push(file.secureUrl) // inyecto las imagenes de la base de datos interna
+
+        const urlCuston =  `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
         file.secureUrl = urlCuston
+     
+      
       })
+      post.images = imagenesConcat
+
     })
-
     return result
-
   }
 
   async findOne({id,req}: {id:number, req?:Request} ) {

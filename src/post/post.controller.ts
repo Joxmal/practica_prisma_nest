@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, UseInterceptors, BadRequestException, Version, Res, Req, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, UseInterceptors, BadRequestException, Version, Res, Req, ParseIntPipe, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -13,6 +13,9 @@ import { diskStorage } from 'multer';
 import { fileNamer } from 'src/common/enums/helpers/fileNamer.helper';
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { Categoria } from '@prisma/client';
+import { FindAllPost } from './dto/controller/findAllPost.dto';
 
 // @UseGuards(JwtAuthGuard,RolesGuard)
 @ApiBearerAuth()
@@ -34,10 +37,10 @@ export class PostController {
   
   @Get()
   findAll(
+    @Query() queryFindAllPost:FindAllPost,
     @Req() req: any,
   ) {
-    console.log('get post')
-    return this.postService.findAll(req);
+    return this.postService.findAll(req,queryFindAllPost);
   }
 
   @Get(':id')
