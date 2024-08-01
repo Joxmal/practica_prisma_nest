@@ -3,12 +3,10 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma.service';
-import { CreateFilePostDto } from './dto/filePost/create-filePost.dto';
 import { existsSync } from 'fs';
 import { FileService } from 'src/common/files/files.service';
 import { consult_get_post } from './prisma/Consults';
 import { Request } from 'express';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { FindAllPost } from './dto/controller/findAllPost.dto';
 
 
@@ -19,12 +17,10 @@ export class PostService {
     private prisma:PrismaService,
     private readonly fileService: FileService
   ){}
-
-
   async create(createPostDto: CreatePostDto, req:any ) {
 
     let filesPost: {id: number}[]
-   
+
     if(createPostDto?.filesPost){
       filesPost = createPostDto.filesPost.map(file => {
         return {
@@ -42,6 +38,7 @@ export class PostService {
       })
     }
 
+    const countCooperador = createPostDto.cooperador.length
     delete createPostDto.filesPost
     delete createPostDto.cooperador
     
@@ -82,10 +79,14 @@ export class PostService {
       return customResult
 
     } catch (error) {
-      console.log(error)
+      console.log("error1",error?.meta.cause.split(',')[0])
+      console.log( "error2",`Expected ${countCooperador} records to be connected`)
+
       if(error.meta.field_name === "posts_authorID_fkey (index)")
         throw new ConflictException('EL AUTOR NO EXISTE')
 
+      if(error.code=== 'P2025' && error?.meta.cause.split(',')[0] === `Expected ${countCooperador} records to be connected`  )
+        throw new ConflictException('UNO DE LOS COOPERADORES NO EXISTE')
      
       
       this.handlerFileRecordsError({error,fileDtoExpected:filesPost.length})
@@ -96,16 +97,21 @@ export class PostService {
 
   async findAll(req:any, queryFindAllPost:FindAllPost) {
     
-    const {limit=50, offset=0 , categoria = {}  } = queryFindAllPost
-    
-    const result = await this.prisma.post.findMany({
-      where:{
+    const {limit=50, offset=0 , categoria  } = queryFindAllPost
+
+    let busqueda:any = {}
+    if(categoria){
+      busqueda = {
         categoria:{
           some:{
             name: categoria
           }
         }
-      }, 
+      }
+    }
+
+    const result = await this.prisma.post.findMany({
+      where:busqueda, 
       orderBy:{id:'asc'},
       include: consult_get_post,
       take:limit,
@@ -122,7 +128,6 @@ export class PostService {
         const urlCuston =  `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
         file.secureUrl = urlCuston
      
-      
       })
       post.images = imagenesConcat
 
@@ -163,7 +168,7 @@ export class PostService {
       throw new NotFoundException('POST NO ENCONTRADO');
     }
 
-    console.log(updatePostDto)
+    
 
     const filesPostExist = existinPost.files.map(file => {
       return {

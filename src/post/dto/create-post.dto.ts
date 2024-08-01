@@ -7,9 +7,12 @@ export class CreatePostDto {
 title: string;
     
 @IsNotEmpty()
-@IsString()
+@IsArray()
+@IsString({
+  each:true
+})
 @IsOptional()
-content: string;
+content: string[];
 
 @IsNotEmpty()
 @IsString()
@@ -31,6 +34,10 @@ published?: boolean
   }
 )
 images?: string[]
+
+@IsNumber()
+@IsOptional()
+template?: number = 1
 
 @IsNotEmpty()
 @IsNumber()

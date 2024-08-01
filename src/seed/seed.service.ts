@@ -125,7 +125,11 @@ export class SeedService {
       const postDataSeed = [
         {
           title: "hallacas navideñas",
-          content: " lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem",
+          content: [
+            'Había una vez una rana llamada Filomena. A ella le encantaba jugar, cantar y saltar, pero no le gustaba prestar sus cosas. Un día, Filomena pidió muchos deseos a una estrella, pero ninguno de ellos era realmente bueno. Quería tener una muñeca para hacer que su amiga Entonela se pusiera celosa. La estrella le dijo que en tres días tendría que cambiar su actitud.',
+            'En un bosque encantado vivía un ratón llamado Tomás. Él era muy curioso y siempre se aventuraba en busca de nuevas experiencias. Un día, mientras exploraba, encontró un túnel misterioso. Sin pensarlo dos veces, decidió adentrarse en él. A medida que avanzaba, descubrió un mundo lleno de criaturas mágicas y tesoros escondidos. Tomás se dio cuenta de que la verdadera aventura estaba en atreverse a explorar lo desconocido.',
+            'En un pequeño pueblo, vivía una niña llamada Lucía. Ella soñaba con convertirse en una gran bailarina. Todos los días practicaba incansablemente, perfeccionando sus movimientos y expresión. Un día, se anunció un concurso de baile en la ciudad y Lucía decidió participar. Con su gracia y pasión, cautivó al público y ganó el primer lugar. Desde ese día, su sueño se hizo realidad y se convirtió en una bailarina reconocida en todo el mundo.'
+          ],
           published: true,
           images:[
             'https://i.postimg.cc/bvpdrH36/playa_bella_vista06_(1).jpg',
@@ -151,7 +155,11 @@ export class SeedService {
         },
         {
           title: "Mariño tiene Cafe",
-          content: " lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem",
+          content: [
+            'Había una vez una rana llamada Filomena. A ella le encantaba jugar, cantar y saltar, pero no le gustaba prestar sus cosas. Un día, Filomena pidió muchos deseos a una estrella, pero ninguno de ellos era realmente bueno. Quería tener una muñeca para hacer que su amiga Entonela se pusiera celosa. La estrella le dijo que en tres días tendría que cambiar su actitud.',
+            'En un bosque encantado vivía un ratón llamado Tomás. Él era muy curioso y siempre se aventuraba en busca de nuevas experiencias. Un día, mientras exploraba, encontró un túnel misterioso. Sin pensarlo dos veces, decidió adentrarse en él. A medida que avanzaba, descubrió un mundo lleno de criaturas mágicas y tesoros escondidos. Tomás se dio cuenta de que la verdadera aventura estaba en atreverse a explorar lo desconocido.',
+            'En un pequeño pueblo, vivía una niña llamada Lucía. Ella soñaba con convertirse en una gran bailarina. Todos los días practicaba incansablemente, perfeccionando sus movimientos y expresión. Un día, se anunció un concurso de baile en la ciudad y Lucía decidió participar. Con su gracia y pasión, cautivó al público y ganó el primer lugar. Desde ese día, su sueño se hizo realidad y se convirtió en una bailarina reconocida en todo el mundo.'
+          ],
           published: true,
           images:[
             'https://i.postimg.cc/bvpdrH36/playa_bella_vista06_(1).jpg',
@@ -177,7 +185,11 @@ export class SeedService {
         },
         {
           title: "La sabrosura esta en chuao",
-          content: " lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lolem lorem lorem lorem lorem lorem lorem lorem lorem",
+          content: [
+            'Había una vez una rana llamada Filomena. A ella le encantaba jugar, cantar y saltar, pero no le gustaba prestar sus cosas. Un día, Filomena pidió muchos deseos a una estrella, pero ninguno de ellos era realmente bueno. Quería tener una muñeca para hacer que su amiga Entonela se pusiera celosa. La estrella le dijo que en tres días tendría que cambiar su actitud.',
+            'En un bosque encantado vivía un ratón llamado Tomás. Él era muy curioso y siempre se aventuraba en busca de nuevas experiencias. Un día, mientras exploraba, encontró un túnel misterioso. Sin pensarlo dos veces, decidió adentrarse en él. A medida que avanzaba, descubrió un mundo lleno de criaturas mágicas y tesoros escondidos. Tomás se dio cuenta de que la verdadera aventura estaba en atreverse a explorar lo desconocido.',
+            'En un pequeño pueblo, vivía una niña llamada Lucía. Ella soñaba con convertirse en una gran bailarina. Todos los días practicaba incansablemente, perfeccionando sus movimientos y expresión. Un día, se anunció un concurso de baile en la ciudad y Lucía decidió participar. Con su gracia y pasión, cautivó al público y ganó el primer lugar. Desde ese día, su sueño se hizo realidad y se convirtió en una bailarina reconocida en todo el mundo.'
+          ],
           published: true,
           images:[
             'https://i.postimg.cc/bvpdrH36/playa_bella_vista06_(1).jpg',

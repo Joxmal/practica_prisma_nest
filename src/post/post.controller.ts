@@ -46,8 +46,8 @@ export class PostController {
   @Get(':id')
   findOne(
     @Req() req: Request,
-    @Param('id') id: string) {
-    return this.postService.findOne({id:+id, req});
+    @Param('id', ParseIntPipe) id: number) {
+    return this.postService.findOne({id:id, req});
   }
 
   @Auth(Role.ADMIN)
