@@ -1,4 +1,4 @@
-import { ForbiddenException, HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -7,6 +7,8 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 
 
 import { PrismaService } from 'src/prisma.service';
+import { token } from 'morgan';
+import { LogoutAuthDto } from './dto/logout-auth';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +23,10 @@ export class AuthService {
     const userExist = await  this.prisma.user.findUnique({
        where: { 
         name: user.name,
+      },
+      omit:{
+        createdAt:true,
+        updatedAt:true,
       }
     });
 
@@ -38,14 +44,18 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload)
     
-    const data  = {
-      user: userExist,
-      token
-  }
+    delete userExist.password
 
-    delete data.user.password
+    const data  = {
+      token,
+      user: {
+        ...userExist
+      },
+    }
+
     return data
     
-
   }
+
+
 }
