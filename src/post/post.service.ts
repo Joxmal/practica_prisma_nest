@@ -120,9 +120,11 @@ export class PostService {
 
     result.forEach(post =>{
       const imagenesConcat: string[] = []
+      
       post.images.forEach(image=> imagenesConcat.push(image))// inyecto las imagenes externas
        
       post.files.forEach(file=>{
+        
         imagenesConcat.push(file.secureUrl) // inyecto las imagenes de la base de datos interna
 
         const urlCuston =  `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
@@ -136,21 +138,28 @@ export class PostService {
   }
 
   async findOne({id,req}: {id:number, req?:Request} ) {
-     const post = await this.prisma.post.findUnique({
+    const post = await this.prisma.post.findUnique({
       include:consult_get_post,
       where: {
         id: id,
       },
     });
+    
 
     if(!post){
       throw new NotFoundException('POST NO ENCONTRADO');
     }
+
     const customPost = post.files.map(file=>{
       // file.secureUrl = `${req.protocol}://[${req.ip}]:${req.socket.localPort}${file.secureUrl}`
       file.secureUrl = `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
+      
+      post.images.unshift(file.secureUrl)
       return file
     })
+
+
+
     post.files = customPost
     return post
   }
