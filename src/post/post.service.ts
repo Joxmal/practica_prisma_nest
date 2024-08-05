@@ -288,6 +288,7 @@ export class PostService {
         
       })
     } catch (error) {
+      console.error(error)
       
     }
     return secureUrl
@@ -375,6 +376,43 @@ export class PostService {
     return {
       response:`archivo N° ${id} eliminado con exito`,
     }
+  }
+
+  async getAllStaticFileImage_ID(req:Request){
+    const fileSearchs = await this.prisma.filesPost.findMany({
+      orderBy:{
+        groupName:'asc'
+      },
+      select:{
+        id:true,
+        filename:true,
+        size:true,
+        groupName:true,
+        secureUrl:true
+      }
+    })
+
+    fileSearchs.forEach((file)=>{
+      file.secureUrl =  `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
+    })
+
+    const groupedImages = {};
+
+    for (const fileSearch of fileSearchs) {
+      const groupName = fileSearch.groupName;
+      if (!groupedImages[groupName]) {
+        groupedImages[groupName] = [];
+      }
+      groupedImages[groupName].push(fileSearch);
+    }
+
+    // `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
+    const arrayFileSearch= fileSearchs.map(file=> {
+      return {
+
+      }
+    } )
+    return groupedImages
   }
 
   //

@@ -63,14 +63,13 @@ export class PostController {
   }
 
   //crear unicamente files nuevos
-  // @Auth(Role.ADMIN)
 
-  // @Auth(Role.ADMIN)
+  @Auth(Role.ADMIN)
   @Post('files')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('file',10, {
     fileFilter: fileFilter,
-    limits:{fileSize:8421056},
+    limits:{fileSize:1*1024*1024},
     storage:diskStorage({
       destination:'./static/uploads/filePost',
       filename: fileNamer
@@ -84,8 +83,17 @@ export class PostController {
     if(!file){
       throw new BadRequestException('no envio archivos, debe ser una imagen')
     }
-
+    console.log("data",data)
     return this.postService.createNewPostFile(req,file,data.name)
+  }
+
+  @Get('filesAll/all')
+  async finAllFileImage_id(
+  @Req() req: Request,
+  ){
+    console.log('aqui callo')
+    const path = await this.postService.getAllStaticFileImage_ID(req)
+    return path
   }
 
   @Get('files/:id')
@@ -93,6 +101,7 @@ export class PostController {
   @Res() res: Response,
   @Param('id') id: string
   ){
+    console.log('aqui callo')
     const path = await this.postService.getStaticFileImage_ID(id)
     res.sendFile(path)
   }
