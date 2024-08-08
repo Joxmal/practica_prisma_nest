@@ -9,7 +9,6 @@ export class CreateCooperadorDto {
     tipoCedula?: String
 
     @IsNumber()
-    @MaxLength(20)
     cedula: number
 
     @MaxLength(30)
