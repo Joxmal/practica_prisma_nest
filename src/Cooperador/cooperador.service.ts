@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateCooperadorDto } from './dto/create-cooperador.dto';
 import { UpdateCooperadorDto } from './dto/update-cooperador.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -11,12 +11,42 @@ export class PatrocinadorService {
   ){}
 
 
-  create(createPatrocinadorDto: CreateCooperadorDto) {
-    return 'This action adds a new patrocinador';
+  async create(createPatrocinadorDto: CreateCooperadorDto) {
+
+    const searchCooperador = await this.prisma.cooperador.findUnique({
+      where: {
+          cedula: createPatrocinadorDto.cedula,
+          tipoCedula: createPatrocinadorDto.tipoCedula,
+      },
+    });
+
+    console.log('searchCooperador',searchCooperador)
+    
+    if(searchCooperador) throw new ConflictException('Cooperador ya existe')
+
+    console.log(typeof createPatrocinadorDto.tipoCedula)
+
+    const { cedula,nombre,tipo,categoria,tipoCedula,ubicacion  } = createPatrocinadorDto
+
+    const response = await this.prisma.cooperador.create({
+      data:{
+        tipoCedula,
+        cedula,
+        nombre,
+        ubicacion,
+        tipo,
+        categorias:{
+          connect: categoria?.map(id =>({ id }))
+        },
+      },
+    })
+
+    return response
+
   }
 
   findAll() {
-    return `This action returns all patrocinador`;
+    return this.prisma.cooperador.findMany()
   }
 
   findOne(id: number) {

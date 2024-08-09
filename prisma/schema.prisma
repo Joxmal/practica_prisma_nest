@@ -76,24 +76,22 @@ model filesPost {
 
 // Cooperadores
 
-enum TipoCooperador {
-  patrocinador
-  colaborador
-}
+
 
 //tambien puede ser colaborador
 model Cooperador {
   id         Int            @id @default(autoincrement())
   tipoCedula String?
-  cedula     Int            @unique @db.Integer()
+  cedula     Int         
   nombre     String         @db.VarChar(30)
   ubicacion  String?
-  tipo       TipoCooperador
+  tipo       String
 
   categorias Categoria[]
   post       Post[]
 
   @@map("cooperador")
+  @@unique([cedula, tipoCedula])
 }
 
 model Categoria {

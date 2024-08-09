@@ -7,5 +7,8 @@ if (!file) return cb(new Error('File is Empty'))
 
     const fileExptension = file.mimetype.split('/')[1]
 
-    return cb(null, `${file.originalname}-${uuid()}.${fileExptension}` )
+    const name = `${file.originalname}-${uuid()}.${fileExptension}`
+    console.log("name", name)
+
+    return cb(null, name )
 }

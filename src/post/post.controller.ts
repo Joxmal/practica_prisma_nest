@@ -83,7 +83,6 @@ export class PostController {
     if(!file){
       throw new BadRequestException('no envio archivos, debe ser una imagen')
     }
-    console.log("data",data)
     return this.postService.createNewPostFile(req,file,data.name)
   }
 

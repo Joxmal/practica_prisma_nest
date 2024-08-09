@@ -6,7 +6,7 @@ export class CreateCooperadorDto {
     @IsString()
     @IsOptional()
     @IsIn(["V", "J", "E"])
-    tipoCedula?: String
+    tipoCedula?: string
 
     @IsNumber()
     cedula: number
@@ -26,11 +26,8 @@ export class CreateCooperadorDto {
     tipo: string
 
     @IsOptional()
-    @IsString({
-        each: true
-    })
     @IsArray()
-    categoria?: string[]
+    categoria?: number[]
 
 
 

@@ -19,7 +19,6 @@ export class CooperadorController {
 
   @Post()
   create(@Body() createCooperadorDto: CreateCooperadorDto) {
-    console.log('creando cooperador')
     return this.patrocinadorService.create(createCooperadorDto);
   }
 

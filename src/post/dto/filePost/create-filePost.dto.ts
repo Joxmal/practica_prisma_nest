@@ -4,8 +4,7 @@ import { ApiProperty } from "@nestjs/swagger"
 export class CreateFilePostDto{
 
 @IsString()
-@MinLength(5)
-name: string
+name: string = 'sin grupo'
 
 @ApiProperty({ type: 'string', format: 'binary', required: true,isArray:true })
 file: Array<Express.Multer.File>

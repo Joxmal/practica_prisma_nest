@@ -279,6 +279,7 @@ export class PostService {
 
     const secureUrl = `${ file.map(file =>  `${req.protocol}://${req.get('host')}/api/post/files/${file.filename}`)}`
 
+    if(!nameFiles) nameFiles = 'sin grupo'
 
     const sanitizedFiles = file.map(file => {
       const { buffer, ...fileData } = file;
