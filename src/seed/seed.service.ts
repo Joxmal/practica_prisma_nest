@@ -146,11 +146,11 @@ export class SeedService {
               name:'gastronómico'
             }
           },
-          cooperador:{
-            connect:[
-              {cedula: 28045702}
-            ]
-          }
+          // cooperador:{
+          //   connect:[
+          //     {cedula: 28045702}
+          //   ]
+          // }
         },
         {
           title: "Mariño tiene Cafe",
@@ -182,11 +182,11 @@ export class SeedService {
               name:'negócios'
             }
           },
-          cooperador:{
-            connect:[
-              {cedula: 28045702}
-            ]
-          }
+          // cooperador:{
+          //   connect:[
+          //     {cedula: 28045702}
+          //   ]
+          // }
         },
         {
           title: "La sabrosura esta en chuao",
@@ -218,11 +218,11 @@ export class SeedService {
               name:'playa'
             }
           },
-          cooperador:{
-            connect:[
-              {cedula: 28045702}
-            ]
-          }
+          // cooperador:{
+          //   connect:[
+          //     {cedula: 28045702}
+          //   ]
+          // }
         },
         {
           title: "La sabrosura esta en chuao 2",
@@ -254,11 +254,11 @@ export class SeedService {
               name:'playa'
             }
           },
-          cooperador:{
-            connect:[
-              {cedula: 28045702}
-            ]
-          }
+          // cooperador:{
+          //   connect:[
+          //     {cedula: 28045702}
+          //   ]
+          // }
         },
         {
           title: "La sabrosura esta en chuao 3",
@@ -290,11 +290,11 @@ export class SeedService {
               name:'playa'
             }
           },
-          cooperador:{
-            connect:[
-              {cedula: 28045702}
-            ]
-          }
+          // cooperador:{
+          //   connect:[
+          //     {cedula: 28045702}
+          //   ]
+          // }
         },
         {
           title: "La sabrosura esta en chuao 4",
@@ -326,11 +326,11 @@ export class SeedService {
               name:'playa'
             }
           },
-          cooperador:{
-            connect:[
-              {cedula: 28045702}
-            ]
-          }
+          // cooperador:{
+          //   connect:[
+          //     {cedula: 28045702}
+          //   ]
+          // }
         },
         {
           title: "La sabrosura esta en chuao 5",
@@ -362,11 +362,11 @@ export class SeedService {
               name:'playa'
             }
           },
-          cooperador:{
-            connect:[
-              {cedula: 28045702}
-            ]
-          }
+          // cooperador:{
+          //   connect:[
+          //     {cedula: 28045702}
+          //   ]
+          // }
         }
       ]
 

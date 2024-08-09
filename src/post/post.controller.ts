@@ -16,6 +16,7 @@ import { ConfigService } from '@nestjs/config';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { Categoria } from '@prisma/client';
 import { FindAllPost } from './dto/controller/findAllPost.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 // @UseGuards(JwtAuthGuard,RolesGuard)
 @ApiBearerAuth()
@@ -25,6 +26,7 @@ export class PostController {
   constructor(
     private readonly postService: PostService,
     private readonly configService: ConfigService,
+    private readonly authService: AuthService
   ) {}
   
   @Auth(Role.ADMIN)
@@ -34,9 +36,26 @@ export class PostController {
     @Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto,req);
   }
-  
+
   @Get()
-  findAll(
+  async findAll(
+    @Query() queryFindAllPost:FindAllPost,
+    @Req() req: any,
+  ) {
+    let modoAdmin= false
+    if(queryFindAllPost?.token){
+      const {role} = await this.authService.decodeToken(queryFindAllPost?.token)
+      if(!role) return
+      console.log("role",role)
+      modoAdmin = [Role.ADMIN, Role.SUPERADMIN, Role.USER].includes(role);
+    }
+
+    return this.postService.findAll(req,queryFindAllPost,modoAdmin);
+  }
+
+  @Auth(Role.ADMIN)
+  @Get('soloAdmin/getAll')
+  admin_findAll(
     @Query() queryFindAllPost:FindAllPost,
     @Req() req: any,
   ) {

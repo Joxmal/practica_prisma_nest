@@ -18,7 +18,7 @@ export class PostService {
     private readonly fileService: FileService
   ){}
   async create(createPostDto: CreatePostDto, req:any ) {
-
+    console.log(createPostDto)
     let filesPost: {id: number}[]
 
     if(createPostDto?.filesPost){
@@ -95,19 +95,27 @@ export class PostService {
     }
   }
 
-  async findAll(req:any, queryFindAllPost:FindAllPost) {
+  async findAll(req:any, queryFindAllPost:FindAllPost, modoAdmin:boolean= false ) {
     
     const {limit=50, offset=0 , categoria  } = queryFindAllPost
+    let busqueda:any = {
+      published:true
+    }
 
-    let busqueda:any = {}
+
     if(categoria){
       busqueda = {
         categoria:{
           some:{
             name: categoria
           }
-        }
+        },
+        published:true
       }
+    }
+
+    if(modoAdmin){
+      delete busqueda.published
     }
 
     const result = await this.prisma.post.findMany({

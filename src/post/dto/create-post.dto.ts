@@ -18,7 +18,7 @@ content: string[];
 @IsString()
 @MaxLength(80)
 @IsOptional()
-summary: string
+summary?: string
 
 @IsOptional()
 @IsBoolean()

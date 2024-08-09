@@ -22,6 +22,9 @@ import { LoggerMiddleware } from './logger/logger.middleware';
       signOptions: { expiresIn: '1h' },
     }),
   ],
+  exports:[
+    AuthService
+  ]
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

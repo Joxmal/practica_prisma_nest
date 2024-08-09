@@ -5,4 +5,8 @@ export class FindAllPost extends PaginationDto  {
     @IsOptional()
     @IsString()
     categoria?: string
+
+    @IsOptional()
+    @IsString()
+    token?:string
 }

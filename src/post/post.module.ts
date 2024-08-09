@@ -10,6 +10,7 @@ import { FileService } from 'src/common/files/files.service';
   controllers: [PostController],
   providers: [PostService,
      PrismaService, ConfigService, FileService],
-  imports:[]
+  imports:[AuthModule],
+
 })
 export class PostModule {}

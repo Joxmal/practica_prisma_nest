@@ -13,7 +13,7 @@ export class PatrocinadorService {
 
   async create(createPatrocinadorDto: CreateCooperadorDto) {
 
-    const searchCooperador = await this.prisma.cooperador.findUnique({
+    const searchCooperador = await this.prisma.cooperador.findFirst({
       where: {
           cedula: createPatrocinadorDto.cedula,
           tipoCedula: createPatrocinadorDto.tipoCedula,
