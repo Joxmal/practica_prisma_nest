@@ -34,6 +34,8 @@ export class PostController {
   create(
     @Req() req: any,
     @Body() createPostDto: CreatePostDto) {
+      console.log('creando post')
+
     return this.postService.create(createPostDto,req);
   }
 

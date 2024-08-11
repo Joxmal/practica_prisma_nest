@@ -21,6 +21,7 @@ export class PostService {
     console.log(createPostDto)
     let filesPost: {id: number}[]
 
+    //crear objero para files
     if(createPostDto?.filesPost){
       filesPost = createPostDto.filesPost.map(file => {
         return {
@@ -29,6 +30,7 @@ export class PostService {
       })
     }
 
+    //crear objero para cooperadores
     let cooperadorDto: {id: number}[]
     if(createPostDto?.cooperador){
       cooperadorDto = createPostDto.cooperador.map(id => {
@@ -38,20 +40,33 @@ export class PostService {
       })
     }
 
+    //crear objero para categoria
+    let categoriaDto: {id: number}[]
+    if(createPostDto?.categoria){
+      categoriaDto = createPostDto.categoria.map(id => {
+        return {
+          id: id
+        }
+      })
+    }
+
+    //contador de los cooperadores
     const countCooperador = createPostDto.cooperador.length
+    
     delete createPostDto.filesPost
     delete createPostDto.cooperador
+    delete createPostDto.categoria
     
     const existinPost = await this.prisma.post.findFirst({
       where: {
         title: createPostDto.title   
       },
     });
-
+    
     if(existinPost){
       throw new ConflictException('POST YA EXISTE');
     }
-
+    
     try {
      const result =  await this.prisma.post.create({
         data:{
@@ -61,6 +76,9 @@ export class PostService {
           },
           cooperador:{
             connect: cooperadorDto
+          },
+          categoria:{
+            connect: categoriaDto
           }
         },
         include:consult_get_post
@@ -201,6 +219,8 @@ export class PostService {
         }
       })
     }
+
+    // crear objeto para update de cooperador
     let cooperadorUpdate:{id: number}[]
     if( updatePostDto?.cooperador){
       cooperadorUpdate = updatePostDto.cooperador.map(id => {
@@ -209,6 +229,18 @@ export class PostService {
         }
       })
     }
+
+    let categoriaUpdate:{id: number}[]
+    if( updatePostDto?.categoria){
+      categoriaUpdate = updatePostDto.categoria.map(id => {
+        return {
+          id:id
+        }
+      })
+    }
+
+
+
     try {
 
       delete updatePostDto.filesPost
@@ -222,6 +254,9 @@ export class PostService {
         },
         cooperador:{
           set : cooperadorUpdate
+        },
+        categoria:{
+          set: categoriaUpdate
         }
       },
       include:{

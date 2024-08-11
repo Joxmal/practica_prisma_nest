@@ -51,4 +51,8 @@ filesPost?: number[]
 @IsOptional()
 cooperador?: number[] 
 
+@IsArray()
+@IsOptional()
+categoria?: number[] 
+
 }
