@@ -45,6 +45,19 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+## app dockerizada en modo produccion
+
+decomentar URL en .env
+
+nest Sera expuesto en el puerto 3000
+
+postgress Sera expuesto en el puerto 5432
+
+```bash
+# productión mode
+$ docker-compose -f docker-compose.prod.yml up --build
+```
+
 ## Test
 
 ```bash
