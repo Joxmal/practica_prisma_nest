@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCooperadorDto } from './dto/create-cooperador.dto';
 import { UpdateCooperadorDto } from './dto/update-cooperador.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -49,15 +49,27 @@ export class PatrocinadorService {
     return this.prisma.cooperador.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patrocinador`;
+  async findOne(id: number) {
+    const findCooperador = await this.prisma.cooperador.findUnique({
+      where:{
+        id
+      }
+    });
+
+    if(!findCooperador) throw new NotFoundException('no se encontro el cooperador')
+    
+    return findCooperador
   }
 
   update(id: number, updatePatrocinadorDto: UpdateCooperadorDto) {
     return `This action updates a #${id} patrocinador`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const findCooperador = await this.findOne(id)
+
+    await this.prisma.cooperador.delete({where:{id:id}})
+
     return `This action removes a #${id} patrocinador`;
   }
 }

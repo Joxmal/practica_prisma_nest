@@ -24,10 +24,7 @@ async function bootstrap() {
   );
 
   // Enable CORS for cross-origin requests
-  app.enableCors({
-    origin: 'http://localhost:8000',
-    credentials:true,
-  });
+  app.enableCors();
 
   // Set prefix for API endpoints
   app.setGlobalPrefix('api');

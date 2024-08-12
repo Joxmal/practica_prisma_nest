@@ -71,13 +71,22 @@ model filesPost {
 
   post Post[]
 
+  imagesCarrusel ImagesCarrusel[] @relation("PostImages")
+
   @@map("files")
 }
 
+model ImagesCarrusel{
+  id Int @id @default(autoincrement())
+  images filesPost[] @relation("PostImages")
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("imagesCarrusel")
+}
+
 // Cooperadores
-
-
-
 //tambien puede ser colaborador
 model Cooperador {
   id         Int            @id @default(autoincrement())
@@ -102,3 +111,5 @@ model Categoria {
 
   @@map("categorias")
 }
+
+

@@ -151,10 +151,11 @@ export class PostService {
        
       post.files.forEach(file=>{
         
-        imagenesConcat.push(file.secureUrl) // inyecto las imagenes de la base de datos interna
-
+        
         const urlCuston =  `${req.protocol}://${req.get('host')}/api/post/files/${file.id}`
         file.secureUrl = urlCuston
+        
+        imagenesConcat.push(file.secureUrl) // inyecto las imagenes de la base de datos interna
      
       })
       post.images = imagenesConcat
