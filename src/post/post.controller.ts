@@ -121,7 +121,6 @@ export class PostController {
   @Res() res: Response,
   @Param('id') id: string
   ){
-    console.log('aqui callo')
     const path = await this.postService.getStaticFileImage_ID(id)
     res.sendFile(path)
   }

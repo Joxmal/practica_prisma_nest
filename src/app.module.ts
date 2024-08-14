@@ -10,6 +10,7 @@ import { join } from 'path';
 import { ExcelModule } from './excel/excel.module';
 import { CooperadorModule } from './Cooperador/cooperador.module';
 import { CategoriasModule } from './categorias/categorias.module';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { CategoriasModule } from './categorias/categorias.module';
     //   rootPath: join(__dirname, '..', 'static/uploads/filePost'),
     // }),
     ConfigModule.forRoot(),
-    PostModule, AuthModule, UsersModule, SeedModule, ExcelModule, CooperadorModule, CategoriasModule
+    PostModule, AuthModule, UsersModule, SeedModule, ExcelModule, CooperadorModule, CategoriasModule, ImagesModule
   ],
   controllers: [],
   providers: [],

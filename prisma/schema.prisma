@@ -71,14 +71,15 @@ model filesPost {
 
   post Post[]
 
-  imagesCarrusel ImagesCarrusel[] @relation("PostImages")
+  imageCarrusel ImagesCarrusel? @relation
 
   @@map("files")
 }
 
 model ImagesCarrusel{
   id Int @id @default(autoincrement())
-  images filesPost[] @relation("PostImages")
+
+  images filesPost @relation(fields: [id],references: [id])
 
 
   createdAt DateTime @default(now())

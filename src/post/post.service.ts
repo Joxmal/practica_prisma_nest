@@ -374,7 +374,6 @@ export class PostService {
   }
 
     if(esNumero(id) ){ //  verificar si es un numero
-      console.log("es un numero")
 
       fileseach = await this.prisma.filesPost.findUnique({
         where:{
@@ -383,7 +382,6 @@ export class PostService {
       })
 
     }else{
-      console.log("no es un numero")
       fileseach = await this.prisma.filesPost.findFirst({
         where:{
           filename:id
@@ -397,7 +395,6 @@ export class PostService {
     }
 
     const path = join(__dirname, '../../static/uploads/filePost', fileseach.filename)
-
     return path
 
   }

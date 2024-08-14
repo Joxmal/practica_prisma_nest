@@ -8,9 +8,16 @@ import { FileService } from 'src/common/files/files.service';
 
 @Module({
   controllers: [PostController],
-  providers: [PostService,
-     PrismaService, ConfigService, FileService],
+  providers: [
+    PostService,
+    PrismaService,
+    ConfigService,
+    FileService
+  ],
   imports:[AuthModule],
+  exports:[
+    PostService
+  ]
 
 })
 export class PostModule {}
