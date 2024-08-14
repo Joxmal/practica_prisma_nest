@@ -2,7 +2,7 @@
 services:
   db:
     image: postgres
-    container_name: postgresprisma
+    container_name: postgresprismaLocal
     restart: always
     ports:
       - '${POSTGRES_PORT}:5432'
@@ -13,5 +13,5 @@ services:
     mem_limit: 2g
 
 volumes:
-  postgres:
+  db:
     name: nest-prisma-docker-db

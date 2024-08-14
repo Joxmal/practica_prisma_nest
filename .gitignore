@@ -2,8 +2,12 @@
 /dist
 /node_modules
 /build
-
+#base de datos
 /postgres
+
+#files
+
+/static/uploads/filePost/**
 
 # Logs
 logs

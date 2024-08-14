@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 import { PrismaService } from 'src/prisma.service';
 import { PostService } from 'src/post/post.service';
+import { UpdateCarruselImageDto } from './dto/carrusel/carrusel-update-image.dto';
 
   
 export interface arrayURLCarrusel {
@@ -54,7 +55,30 @@ export class ImagesService {
 
   }
 
-  updateImagesCarrusel(updateImageDto: UpdateImageDto){
+  async updateImagesCarrusel(updateCarruselImageDto: UpdateCarruselImageDto){
 
+
+
+    const ImageSearch = await this.prisma.filesPost.findMany({
+      where:{
+        id:{
+          in: updateCarruselImageDto.idImages
+        }
+      }
+    })
+
+    if(updateCarruselImageDto.idImages.length !== ImageSearch.length ){
+      throw new NotFoundException('Uno o más IDs no se encontraron en la base de datos')
+    }
+    
+    const idImages = updateCarruselImageDto.idImages.map((id)=> ({ id }))
+    
+
+    await this.prisma.imagesCarrusel.deleteMany()
+    const result = await this.prisma.imagesCarrusel.createManyAndReturn({
+      data:idImages
+    })
+
+    return result
   }
 }

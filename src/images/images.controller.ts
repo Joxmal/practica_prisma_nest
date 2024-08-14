@@ -5,7 +5,8 @@ import { UpdateImageDto } from './dto/update-image.dto';
 import { UpdateCarruselImageDto } from './dto/carrusel/carrusel-update-image.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/common/enums/rol.enum';
-
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+@ApiTags("Modulo imagenes")
 @Controller('images')
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
@@ -19,10 +20,11 @@ export class ImagesController {
     return this.imagesService.getAllImagesCarrusel();
   }
 
-  @Auth(Role.ADMIN)
+  @ApiBearerAuth()
+  // @Auth(Role.ADMIN)
   @Patch('carrusel')
-  patchImagesCarrusel(@Body() updateImageDto: UpdateCarruselImageDto) {
-    return this.imagesService.updateImagesCarrusel(updateImageDto);
+  patchImagesCarrusel(@Body() updateCarruselImageDto: UpdateCarruselImageDto) {
+    return this.imagesService.updateImagesCarrusel(updateCarruselImageDto);
   }
 
   // imagenes a futuro
