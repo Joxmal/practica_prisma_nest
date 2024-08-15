@@ -147,7 +147,7 @@ export class PostService {
     result.forEach(post =>{
       const imagenesConcat: string[] = []
       
-      post.images.forEach(image=> imagenesConcat.push(image))// inyecto las imagenes externas
+      post.images.forEach(image=> imagenesConcat.unshift(image))// inyecto las imagenes externas
        
       post.files.forEach(file=>{
         
