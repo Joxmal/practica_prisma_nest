@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpCode, HttpStatus } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
@@ -22,6 +22,7 @@ export class ImagesController {
 
   @ApiBearerAuth()
   // @Auth(Role.ADMIN)
+  @HttpCode(HttpStatus.OK)
   @Patch('carrusel')
   patchImagesCarrusel(@Body() updateCarruselImageDto: UpdateCarruselImageDto) {
     return this.imagesService.updateImagesCarrusel(updateCarruselImageDto);

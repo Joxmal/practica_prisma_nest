@@ -46,18 +46,12 @@ export class ImagesService {
         updatedAt:true
       }
     })
-
-
-
-
     return  findIDcarrusel
-    
-
   }
 
   async updateImagesCarrusel(updateCarruselImageDto: UpdateCarruselImageDto){
 
-
+    console.log(updateCarruselImageDto)
 
     const ImageSearch = await this.prisma.filesPost.findMany({
       where:{
@@ -66,19 +60,22 @@ export class ImagesService {
         }
       }
     })
+    console.log('aui')
 
     if(updateCarruselImageDto.idImages.length !== ImageSearch.length ){
+      console.log('Uno o más IDs no se encontraron en la base de datos')
       throw new NotFoundException('Uno o más IDs no se encontraron en la base de datos')
     }
     
     const idImages = updateCarruselImageDto.idImages.map((id)=> ({ id }))
     
-
     await this.prisma.imagesCarrusel.deleteMany()
+    
     const result = await this.prisma.imagesCarrusel.createManyAndReturn({
       data:idImages
     })
-
+    
+    console.log(result)
     return result
   }
 }
