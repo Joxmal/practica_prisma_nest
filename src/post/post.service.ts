@@ -137,6 +137,22 @@ export class PostService {
       delete busqueda.published
     }
 
+
+    // buscar segun el titulo que se inserto
+    
+    // const result = await this.prisma.post.findMany({
+    //   where: {
+    //     title: {
+    //       contains: 'cafe', // Busca títulos que contengan 'cafe'
+    //       mode: 'insensitive' // Opcional: hace la búsqueda sin distinguir entre mayúsculas y minúsculas
+    //     }
+    //   },
+    //   orderBy: { id: 'asc' },
+    //   include: consult_get_post,
+    //   take: limit,
+    //   skip: offset
+    // });
+
     const result = await this.prisma.post.findMany({
       where:busqueda, 
       orderBy:{id:'asc'},
@@ -281,9 +297,11 @@ export class PostService {
             id:true,
             nombre:true
           }
-        }
+        },
+        categoria:true
       }
     });
+
     return updatePost
       
     } catch (error) {

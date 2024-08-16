@@ -8,5 +8,9 @@ export class FindAllPost extends PaginationDto  {
 
     @IsOptional()
     @IsString()
+    titleSearch?: string
+
+    @IsOptional()
+    @IsString()
     token?:string
 }
