@@ -8,6 +8,7 @@ import { FileService } from 'src/common/files/files.service';
 import { consult_get_post } from './prisma/Consults';
 import { Request } from 'express';
 import { FindAllPost } from './dto/controller/findAllPost.dto';
+import { Prisma } from '@prisma/client';
 
 
 @Injectable()
@@ -400,33 +401,54 @@ export class PostService {
   }
 
   async removeFilePost(id:number){
-    console.log(id)
-    const file = await this.prisma.filesPost.findUnique({
-      where: {
-        id: id,
-      },
-    })
 
-    if(!file){
-     throw new NotFoundException("no se encontro el archivo: " + id)
-    }
-
-    const filePath =  `./static/uploads/filePost/${file.filename}`
-
-    const deleteFile = await this.prisma.filesPost.delete({
-      where:{
-        id: id
+    
+    try {
+      const file = await this.prisma.filesPost.findUnique({
+        where: {
+          id: id,
+        },
+      })
+      if(!file){
+       throw new NotFoundException("no se encontro el archivo: " + id)
       }
-    })
+      
+      const filePath =  `./static/uploads/filePost/${file.filename}`
 
-    
-     const deletedFile= await this.fileService.deleteFile(filePath)
-
-    
-
-    return {
-      response:`archivo N° ${id} eliminado con exito`,
+      await this.prisma.imagesCarrusel.delete({
+        where:{
+          id:id
+        }
+      })
+  
+      const deleteFile = await this.prisma.filesPost.delete({
+        where:{
+          id: id
+        }
+      })
+          
+              
+      const deletedFile= await this.fileService.deleteFile(filePath)
+  
+      
+  
+      return {
+        response:`archivo N° ${id} eliminado con exito`,
+      }
+      
+    } catch (e) {
+      
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        // The .code property can be accessed in a type-safe manner
+        if (e.code === 'P2003') {
+          console.log(e)
+          console.error(
+            'violaciones de restricciones de clave foránea.'
+          )
+        }
+      }
     }
+
   }
 
   async getAllStaticFileImage_ID(req:Request){

@@ -17,6 +17,7 @@ export const consult_get_post = {
       size: true,
     },
   },
+  categoria:true
 };
 
 export const consult_get_post2 =(req:any,secureUrl: string)=>{
