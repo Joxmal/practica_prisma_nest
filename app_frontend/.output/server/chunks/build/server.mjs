@@ -6510,17 +6510,17 @@ const _routes = [
   {
     name: "admin-dasboard-carrusel-imagenes",
     path: "/admin/dasboard/carrusel/imagenes",
-    component: () => import('./imagenes-Dllr_rRb.mjs').then((m) => m.default || m)
+    component: () => import('./imagenes-BxJV2QQN.mjs').then((m) => m.default || m)
   },
   {
     name: "admin-dasboard-categoria-crearCategoria",
     path: "/admin/dasboard/categoria/crearCategoria",
-    component: () => import('./crearCategoria-BJ9s_51C.mjs').then((m) => m.default || m)
+    component: () => import('./crearCategoria-C-QgRTQm.mjs').then((m) => m.default || m)
   },
   {
     name: "admin-dasboard-cooperador-crearCooperador",
     path: "/admin/dasboard/cooperador/crearCooperador",
-    component: () => import('./crearCooperador-Do5mvCcB.mjs').then((m) => m.default || m)
+    component: () => import('./crearCooperador-CA6v9s4v.mjs').then((m) => m.default || m)
   },
   {
     name: "admin-dasboard",
@@ -6530,14 +6530,14 @@ const _routes = [
   {
     name: "admin-dasboard-post-crearPost",
     path: "/admin/dasboard/post/crearPost",
-    component: () => import('./crearPost-F7xKsIUQ.mjs').then(function(n2) {
+    component: () => import('./crearPost-DslYDTUo.mjs').then(function(n2) {
       return n2.c;
     }).then((m) => m.default || m)
   },
   {
     name: "admin-dasboard-subirImagen",
     path: "/admin/dasboard/subirImagen",
-    component: () => import('./subirImagen-BP_AO5Pw.mjs').then(function(n2) {
+    component: () => import('./subirImagen-Cyt09yks.mjs').then(function(n2) {
       return n2.s;
     }).then((m) => m.default || m)
   },
@@ -6545,17 +6545,17 @@ const _routes = [
     name: "admin-login",
     path: "/admin/login",
     meta: __nuxt_page_meta || {},
-    component: () => import('./login-DyYLybV9.mjs').then((m) => m.default || m)
+    component: () => import('./login-D4fSrn4I.mjs').then((m) => m.default || m)
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-DEZOmLCC.mjs').then((m) => m.default || m)
+    component: () => import('./index-C-Xd3Wir.mjs').then((m) => m.default || m)
   },
   {
     name: "post-category-id",
     path: "/post/:category()/:id()",
-    component: () => import('./_id_-B3Yia5BP.mjs').then((m) => m.default || m)
+    component: () => import('./_id_-DObYeEfy.mjs').then((m) => m.default || m)
   },
   {
     name: "users",
@@ -8467,8 +8467,8 @@ const plugins = [
   plugin_rX4KJc0gH2
 ];
 const layouts = {
-  admin: () => import('./admin-DzwPK3vi.mjs').then((m) => m.default || m),
-  default: () => import('./default-BuZbh0cZ.mjs').then((m) => m.default || m)
+  admin: () => import('./admin-BQ-na5Q5.mjs').then((m) => m.default || m),
+  default: () => import('./default-oYtnwT8k.mjs').then((m) => m.default || m)
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
@@ -8762,7 +8762,7 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-BMYxLfDg.mjs').then((r) => r.default || r));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-CK6DIOUD.mjs').then((r) => r.default || r));
     const _Error = defineAsyncComponent(() => import('./error-500-BSQ4BdPp.mjs').then((r) => r.default || r));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
@@ -8844,5 +8844,5 @@ let entry;
 }
 const entry$1 = (ssrContext) => entry(ssrContext);
 
-export { clientOnly$1 as A, On as O, useNuxtApp as a, useRouter$1 as b, useRuntimeConfig as c, defineStore as d, entry$1 as default, navigateTo as e, withoutTrailingSlash as f, useState as g, hasProtocol as h, useAppConfig as i, joinURL as j, asyncDataDefaults as k, createError as l, hash as m, nuxtLinkDefaults as n, fetchDefaults as o, parseQuery$1 as p, useRequestFetch as q, resolveRouteObject as r, useRoute$1 as s, defineNuxtRouteMiddleware as t, useHead as u, useCookie as v, withTrailingSlash as w, executeAsync as x, useRouter as y, br as z };
+export { clientOnly$1 as A, On as O, useNuxtApp as a, useRouter$1 as b, navigateTo as c, defineStore as d, entry$1 as default, useRuntimeConfig as e, withoutTrailingSlash as f, useState as g, hasProtocol as h, useAppConfig as i, joinURL as j, asyncDataDefaults as k, createError as l, hash as m, nuxtLinkDefaults as n, fetchDefaults as o, parseQuery$1 as p, useRequestFetch as q, resolveRouteObject as r, useRoute$1 as s, defineNuxtRouteMiddleware as t, useHead as u, useCookie as v, withTrailingSlash as w, executeAsync as x, useRouter as y, br as z };
 //# sourceMappingURL=server.mjs.map

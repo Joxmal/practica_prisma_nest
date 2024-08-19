@@ -3,7 +3,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY app_frontend ./
 
-ENV NITRO_PORT=8000
+ENV NITRO_PORT=3001
 CMD ["node", "./.output/server/index.mjs"]
 
 # RUN npm i install -g cross-env

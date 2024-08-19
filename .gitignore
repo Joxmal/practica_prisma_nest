@@ -5,6 +5,8 @@
 #base de datos
 /postgres
 
+/app_frontend/**
+
 #files
 
 /static/uploads/filePost/**
