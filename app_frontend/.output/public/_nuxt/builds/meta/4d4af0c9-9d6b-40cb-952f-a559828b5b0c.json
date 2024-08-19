@@ -1,0 +1,1 @@
+{"id":"4d4af0c9-9d6b-40cb-952f-a559828b5b0c","timestamp":1724040425466,"matcher":{"static":{},"wildcard":{"/admin":{"appMiddleware":{"jwt-auth":true}},"/admin/dasboard":{"appMiddleware":{"auth":true}}},"dynamic":{}},"prerendered":[]}

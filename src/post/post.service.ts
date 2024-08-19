@@ -137,6 +137,13 @@ export class PostService {
       delete busqueda.published
     }
 
+    if(queryFindAllPost.titleSearch){
+      busqueda.title={
+        contains: queryFindAllPost.titleSearch,
+        mode:'insensitive'
+      }
+    }
+
 
     // buscar segun el titulo que se inserto
     
