@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -438,7 +438,9 @@ export class PostService {
         },
         
       })
+
       console.log('file',file)
+
       if(!file){
        console.log('sin file')
        throw new NotFoundException("no se encontro el archivo: " + id)
@@ -460,9 +462,13 @@ export class PostService {
           
       console.log('deleteFile',deleteFile)
 
-      const deletedFile= await this.fileService.deleteFile(filePath)
+      try {
+        await this.fileService.deleteFile(filePath);
+      } catch (error) {
+        console.error('Error deleting file:', error);
+        throw new InternalServerErrorException('Error deleting file');
+      }
   
-      console.log('deletedFile',deletedFile)
   
       return {
         response:`archivo N° ${id} eliminado con exito`,
