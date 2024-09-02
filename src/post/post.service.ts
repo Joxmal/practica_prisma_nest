@@ -429,16 +429,20 @@ export class PostService {
   }
 
   async removeFilePost(id:number){
+    console.log('eliminando en el service')
 
-    
     try {
       const file = await this.prisma.filesPost.findUnique({
         where: {
           id: id,
         },
+        
       })
+      console.log('file',file)
       if(!file){
+       console.log('sin file')
        throw new NotFoundException("no se encontro el archivo: " + id)
+
       }
       
       const filePath =  `./static/uploads/filePost/${file.filename}`
@@ -458,7 +462,7 @@ export class PostService {
               
       const deletedFile= await this.fileService.deleteFile(filePath)
   
-      
+      console.log('deletedFile',deletedFile)
   
       return {
         response:`archivo N° ${id} eliminado con exito`,
