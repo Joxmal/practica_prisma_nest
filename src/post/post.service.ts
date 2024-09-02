@@ -451,14 +451,15 @@ export class PostService {
           id:id
         }
       })
-  
+      console.log('eliminado del carrusel')
       const deleteFile = await this.prisma.filesPost.delete({
         where:{
           id: id
         }
       })
           
-              
+      console.log('deleteFile',deleteFile)
+
       const deletedFile= await this.fileService.deleteFile(filePath)
   
       console.log('deletedFile',deletedFile)
