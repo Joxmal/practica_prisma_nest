@@ -322,12 +322,15 @@ export class PostService {
 
   async remove(id: number) {
 
+    console.log(`el numero a borrar es ${id}`)
+
     try {
-      await this.prisma.post.delete({
+      const postEliminado = await this.prisma.post.delete({
         where: {
           id: id,
         },
       })
+      console.log(`post eliminado: ${postEliminado}`)
 
       return {message: 'Post eliminado correctamente'}
     } catch (error) {
