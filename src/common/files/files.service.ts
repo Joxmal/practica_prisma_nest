@@ -5,7 +5,7 @@ import { unlink } from 'fs';
 export class FileService {
   async deleteFile(filePath: string): Promise<void> {
 
-    console.log(filePath)
+    // console.log(filePath)
     return new Promise((resolve, reject) => {
       unlink(filePath, (error) => {
         if (error) {

@@ -429,7 +429,7 @@ export class PostService {
   }
 
   async removeFilePost(id:number){
-    console.log('eliminando en el service')
+    // console.log('eliminando en el service')
 
     try {
       const file = await this.prisma.filesPost.findUnique({
@@ -439,33 +439,39 @@ export class PostService {
         
       })
 
-      console.log('file',file)
+      // console.log('file',file)
 
       if(!file){
-       console.log('sin file')
+      //  console.log('sin file')
        throw new NotFoundException("no se encontro el archivo: " + id)
       }
       
-      const filePath =  `./static/uploads/filePost/${file.filename}`
+      // const filePath =  `./static/uploads/filePost/${file.filename}`
+      const filePath =  `${file.patch}`
+      // console.log("filePath",filePath)
 
-      await this.prisma.imagesCarrusel.delete({
-        where:{
-          id:id
-        }
-      })
-      console.log('eliminado del carrusel')
+
+      
+      await this.prisma.imagesCarrusel.deleteMany({
+        where: {
+          id: id,
+        },
+      });
+
+
+      // console.log('eliminado del carrusel')
       const deleteFile = await this.prisma.filesPost.delete({
         where:{
           id: id
         }
       })
           
-      console.log('deleteFile',deleteFile)
+      // console.log('deleteFile',deleteFile)
 
       try {
         await this.fileService.deleteFile(filePath);
       } catch (error) {
-        console.error('Error deleting file:', error);
+        // console.error('Error deleting file:', error);
         throw new InternalServerErrorException('Error deleting file');
       }
   

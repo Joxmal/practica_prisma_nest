@@ -130,7 +130,7 @@ export class PostController {
   async removeFile(
     @Param('id', ParseIntPipe) id:number
   ){
-    console.log('eliminando')
+    // console.log('eliminando')
     return await this.postService.removeFilePost(id)
   }
 }
