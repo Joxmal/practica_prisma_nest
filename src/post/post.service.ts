@@ -442,7 +442,6 @@ export class PostService {
       if(!file){
        console.log('sin file')
        throw new NotFoundException("no se encontro el archivo: " + id)
-
       }
       
       const filePath =  `./static/uploads/filePost/${file.filename}`
