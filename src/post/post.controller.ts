@@ -125,13 +125,12 @@ export class PostController {
     res.sendFile(path)
   }
 
-
   @Auth(Role.ADMIN)
   @Delete('files/:id')
   async removeFile(
     @Param('id', ParseIntPipe) id:number
   ){
-  
+    console.log('eliminando')
     return await this.postService.removeFilePost(id)
   }
 }
